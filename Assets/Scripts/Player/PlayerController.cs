@@ -19,8 +19,9 @@ namespace TotallyNotEvil
         [SerializeField] private float mulitplier = 50f;
         [SerializeField] private float powerLimit = 250f;
 
-        [Header("Orb")]
+        [Header("Orb & Aiming")]
         [SerializeField] private GameObject orbPrefab;
+
 
         [Header("Camera")]
         [SerializeField] private CameraController vCam;
@@ -32,6 +33,7 @@ namespace TotallyNotEvil
         private Actions actions;
         private InputDevice device;
         private Camera cam;
+        private LineRenderer lr;
 
         private IMoveable moveAM;
 
@@ -73,6 +75,8 @@ namespace TotallyNotEvil
             rb = am.GetComponent<Rigidbody2D>();
             cam = Camera.main;
 
+            lr = GetComponent<LineRenderer>();
+
             // defines the object in at the start as possessed.
             am.GetComponent<IPossessable>().IsPossessed = true;
 
@@ -87,10 +91,15 @@ namespace TotallyNotEvil
             {
                 if (isAiming)
                 {
+                    lr.enabled = true;
+
                     power += Time.deltaTime * mulitplier;
 
                     if (power > powerLimit)
                         power = powerLimit;
+
+                    lr.SetPosition(0, am.transform.position);
+                    lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
                 }
                 else
                 {
@@ -110,10 +119,20 @@ namespace TotallyNotEvil
                 // oh dear.... take dmg & allow player to shoot again. (dmg bit not done yet xD)
                 if (isAiming)
                 {
+                    lr.enabled = true;
+
                     power += Time.deltaTime * mulitplier;
 
                     if (power > powerLimit)
                         power = powerLimit;
+
+                    lr.SetPosition(0, orb.transform.position);
+
+
+                    if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                        lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
+                    else
+                        lr.SetPosition(1, actions.Movement.Move.ReadValue<Vector2>() - (Vector2)am.transform.position * 10);
                 }
             }
         }
@@ -178,12 +197,13 @@ namespace TotallyNotEvil
             {
                 // allows for movement if not in a body xD
                 if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)orb.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
                 else
                     orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
             }
 
             // stop "aiming" & reset the pwoer value
+            lr.enabled = false;
             isAiming = false;
             power = 0f;
         }
