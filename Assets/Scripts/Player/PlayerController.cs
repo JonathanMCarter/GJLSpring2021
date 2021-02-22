@@ -99,7 +99,11 @@ namespace TotallyNotEvil
                         power = powerLimit;
 
                     lr.SetPosition(0, am.transform.position);
-                    lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
+
+                    if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                        lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
+                    else
+                        lr.SetPosition(1, (Vector2)am.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
                 }
                 else
                 {
@@ -132,7 +136,7 @@ namespace TotallyNotEvil
                     if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
                         lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
                     else
-                        lr.SetPosition(1, actions.Movement.Move.ReadValue<Vector2>() - (Vector2)am.transform.position * 10);
+                        lr.SetPosition(1, (Vector2)am.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
                 }
             }
         }
