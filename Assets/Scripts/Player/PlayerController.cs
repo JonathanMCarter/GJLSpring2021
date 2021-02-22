@@ -43,15 +43,13 @@ namespace TotallyNotEvil
         private bool isAiming;
 
 
-
         private void OnDisable()
         {
             actions.Disable();
         }
 
 
-
-        private void Awake()
+        private void OnEnable()
         {
             actions = new Actions();
 
@@ -71,14 +69,15 @@ namespace TotallyNotEvil
 
         private void Start()
         {
+            // References
             rb = am.GetComponent<Rigidbody2D>();
             cam = Camera.main;
-
             lr = GetComponent<LineRenderer>();
 
-            // defines the object in at the start as possessed.
+            // Defines the object in at the start as possessed.
             am.GetComponent<IPossessable>().IsPossessed = true;
 
+            // Sets up the orb
             orb = Instantiate(orbPrefab);
             orb.SetActive(false);
         }
@@ -86,23 +85,14 @@ namespace TotallyNotEvil
 
         private void Update()
         {
+            // if the player is in a body...
             if (inBody)
             {
+                // is the player aiming...
                 if (isAiming)
                 {
-                    lr.enabled = true;
-
-                    power += Time.deltaTime * mulitplier;
-
-                    if (power > powerLimit)
-                        power = powerLimit;
-
-                    lr.SetPosition(0, am.transform.position);
-
-                    if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                        lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
-                    else
-                        lr.SetPosition(1, (Vector2)am.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
+                    IncreasePower();
+                    AimingLine(am);
                 }
                 else
                 {
@@ -122,20 +112,8 @@ namespace TotallyNotEvil
                 // oh dear.... take dmg & allow player to shoot again. (dmg bit not done yet xD)
                 if (isAiming)
                 {
-                    lr.enabled = true;
-
-                    power += Time.deltaTime * mulitplier;
-
-                    if (power > powerLimit)
-                        power = powerLimit;
-
-                    lr.SetPosition(0, orb.transform.position);
-
-
-                    if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                        lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
-                    else
-                        lr.SetPosition(1, (Vector2)orb.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
+                    IncreasePower();
+                    AimingLine(orb);
                 }
             }
         }
@@ -156,7 +134,7 @@ namespace TotallyNotEvil
 
 
         /// <summary>
-        /// Called when the user press the shoot button (either held down or tapped)
+        /// Called when the user press the shoot button (either held down or tapped, like GetButtonDown in the old input system)
         /// </summary>
         /// <param name="ctx"></param>
         private void Drawing(InputAction.CallbackContext ctx)
@@ -166,45 +144,34 @@ namespace TotallyNotEvil
 
 
         /// <summary>
-        /// Called when the user releases the shoot button
+        /// Called when the user releases the shoot button (Like GetButtonUp in the old input system)
         /// </summary>
         /// <param name="ctx"></param>
         private void Release(InputAction.CallbackContext ctx)
         {
-            // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
             if (inBody)
             {
+                // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
                 Physics2D.IgnoreCollision(orb.GetComponent<Collider2D>(), am.GetComponent<Collider2D>());
 
                 // yeet the player (orb) around
                 orb.SetActive(true);
-
                 orb.transform.position = am.transform.position;
 
+                // the player is no longer in a body
                 inBody = false;
 
                 // direction to shoot
-                if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)am.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                else
-                    orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                ShootOrbInDirection(am);
                 
-
                 orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
-
                 rb.velocity = Vector2.zero;
                 am = null;
-
                 vCam.SetTargetAndFollow(orb.transform);
             }
             else
-            {
-                // allows for movement if not in a body xD
-                if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)orb.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                else
-                    orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-            }
+                ShootOrbInDirection(orb);
+
 
             // stop "aiming" & reset the power value
             lr.enabled = false;
@@ -227,6 +194,49 @@ namespace TotallyNotEvil
                 device = lastControl.device;
                 Debug.Log(device.displayName);
             }
+        }
+
+
+        /// <summary>
+        /// Increases the power of the shot when called.
+        /// </summary>
+        private void IncreasePower()
+        {
+            power += Time.deltaTime * mulitplier;
+
+            if (power > powerLimit)
+                power = powerLimit;
+        }
+
+
+        /// <summary>
+        /// Draws the line renderer from the player possessed character / orb to where they are aiming.
+        /// </summary>
+        /// <param name="player">What the player currently is</param>
+        private void AimingLine(GameObject player)
+        {
+            if (!lr.enabled)
+                lr.enabled = true;
+
+            lr.SetPosition(0, am.transform.position);
+
+            if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
+            else
+                lr.SetPosition(1, (Vector2)player.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
+        }
+
+
+        /// <summary>
+        /// Shoots the player in the direction aiming at.
+        /// </summary>
+        /// <param name="player">What the player currently is</param>
+        private void ShootOrbInDirection(GameObject player)
+        {
+            if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)player.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+            else
+                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
         }
     }
 }
