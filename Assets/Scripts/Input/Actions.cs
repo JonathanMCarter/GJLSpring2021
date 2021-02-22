@@ -69,7 +69,7 @@ public class @Actions : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""7afa68fd-7348-4fef-bfc7-c46adff2feb5"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": """",
                     ""interactions"": """"
                 }
             ],

@@ -25,7 +25,7 @@ namespace TotallyNotEvil
         // input controls ref
         private Actions actions;
         private InputDevice device;
-        //private Camera cam;
+        private Camera cam;
 
         // component ref
         private Rigidbody2D rb;
@@ -54,7 +54,7 @@ namespace TotallyNotEvil
         private void Start()
         {
             rb = am.GetComponent<Rigidbody2D>();
-            //cam = Camera.main;
+            cam = Camera.main;
 
             // defines the object in at the start as possessed.
             am.GetComponent<IPossessable>().IsPossessed = true;
@@ -69,9 +69,9 @@ namespace TotallyNotEvil
             // for debugging only, can be removed if causing issues xD
             //if (am)
             //{
-            //    Debug.DrawLine(am.transform.position, actions.Movement.Move.ReadValue<Vector2>() * 10, Color.red);
-            //    Debug.DrawLine(am.transform.position, actions.Movement.MousePos.ReadValue<Vector2>() * 10, Color.blue);
-            //    Debug.DrawLine(am.transform.position, cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) * 10, Color.green);
+            ////    Debug.DrawLine(am.transform.position, actions.Movement.Move.ReadValue<Vector2>() * 10, Color.red);
+            ////    Debug.DrawLine(am.transform.position, actions.Movement.MousePos.ReadValue<Vector2>() * 10, Color.blue);
+            //    //Debug.DrawLine(am.transform.position, cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()), Color.green);
             //}
             
 
@@ -156,7 +156,7 @@ namespace TotallyNotEvil
             if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
             {
                 Debug.Log("PC");
-                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.MousePos.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)am.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
             }
             else
             {
