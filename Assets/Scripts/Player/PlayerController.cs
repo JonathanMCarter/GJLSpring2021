@@ -22,7 +22,6 @@ namespace TotallyNotEvil
         [Header("Orb & Aiming")]
         [SerializeField] private GameObject orbPrefab;
 
-
         [Header("Camera")]
         [SerializeField] private CameraController vCam;
 
@@ -136,7 +135,7 @@ namespace TotallyNotEvil
                     if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
                         lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
                     else
-                        lr.SetPosition(1, (Vector2)am.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
+                        lr.SetPosition(1, (Vector2)orb.transform.position + actions.Movement.Move.ReadValue<Vector2>() * 5);
                 }
             }
         }
@@ -193,6 +192,7 @@ namespace TotallyNotEvil
 
                 orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
 
+                rb.velocity = Vector2.zero;
                 am = null;
 
                 vCam.SetTargetAndFollow(orb.transform);
@@ -206,7 +206,7 @@ namespace TotallyNotEvil
                     orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
             }
 
-            // stop "aiming" & reset the pwoer value
+            // stop "aiming" & reset the power value
             lr.enabled = false;
             isAiming = false;
             power = 0f;
