@@ -4,16 +4,25 @@ using UnityEngine;
 
 namespace TotallyNotEvil
 {
-    public class Orb : MonoBehaviour
+    public class Orb : MonoBehaviour, IDamagable
     {
         // assinged to avoid GD
         private WaitForSeconds wait;
         [SerializeField] private bool canPossess;
 
 
+        // Damage
+        public int Health { get; set; }
+
+
         private void OnDisable()
         {
             StopAllCoroutines();
+        }
+
+        private void OnEnable()
+        {
+            Health = 10;
         }
 
         private void Start()
@@ -73,6 +82,16 @@ namespace TotallyNotEvil
             was.IsPossessed = false;
 
             canPossess = true;
+        }
+
+
+        /// <summary>
+        /// Takes damage.
+        /// </summary>
+        /// <param name="dmg"></param>
+        public void TakeDamage(int dmg)
+        {
+            Health -= dmg;
         }
     }
 }
