@@ -19,7 +19,13 @@ namespace TotallyNotEvil
         [SerializeField] private float mulitplier = 50f;
         [SerializeField] private float powerLimit = 250f;
 
+        [Header("Orb")]
         [SerializeField] private GameObject orbPrefab;
+
+        [Header("Camera")]
+        [SerializeField] private CameraController vCam;
+
+
         private GameObject orb;
 
         // input controls ref
@@ -33,13 +39,16 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
 
         // is the user aiming
-        [SerializeField] private bool isAiming;
-        [SerializeField] private LayerMask mask;
+        private bool isAiming;
+
+
 
         private void OnDisable()
         {
             actions.Disable();
         }
+
+
 
         private void Awake()
         {
@@ -58,6 +67,7 @@ namespace TotallyNotEvil
             actions.Enable();
         }
 
+
         private void Start()
         {
             rb = am.GetComponent<Rigidbody2D>();
@@ -73,15 +83,6 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            // for debugging only, can be removed if causing issues xD
-            //if (am)
-            //{
-            ////    Debug.DrawLine(am.transform.position, actions.Movement.Move.ReadValue<Vector2>() * 10, Color.red);
-            ////    Debug.DrawLine(am.transform.position, actions.Movement.MousePos.ReadValue<Vector2>() * 10, Color.blue);
-            //    //Debug.DrawLine(am.transform.position, cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()), Color.green);
-            //}
-            
-
             if (inBody)
             {
                 if (isAiming)
@@ -103,32 +104,10 @@ namespace TotallyNotEvil
                             moveAM.JumpAction();
                     }
                 }
-
-
-                #region (Old Code)
-                // Old - Raycast Based Movement (Mostly used to check is possession worked xD
-                //if (hit = Physics2D.Raycast(am.transform.position, actions.Movement.Move.ReadValue<Vector2>().normalized * 100, Mathf.Infinity, targetLayer))
-                //{
-                //    if (hit.collider.GetComponent<IPossessable>() != null)
-                //    {
-                //        targeting = hit.collider.GetComponent<IPossessable>();
-                //    }
-                //}
-
-
-                //actions.Pocess.Shoot.performed += shoot =>
-                //{
-                //    if (targeting != null)
-                //    {
-                //        rb.velocity = ((targeting.obj.transform.position - am.transform.position).normalized * 10);
-                //        inBody = false;
-                //    }
-                //};
-                #endregion
             }
             else
             {
-                // oh dear.... take dmg & allow player to shoot again.
+                // oh dear.... take dmg & allow player to shoot again. (dmg bit not done yet xD)
                 if (isAiming)
                 {
                     power += Time.deltaTime * mulitplier;
@@ -150,6 +129,7 @@ namespace TotallyNotEvil
             if (am.GetComponent<IMoveable>() != null) moveAM = am.GetComponent<IMoveable>();
             rb = am.GetComponent<Rigidbody2D>();
             inBody = true;
+            vCam.SetTargetAndFollow(am.transform);
         }
 
 
@@ -181,33 +161,26 @@ namespace TotallyNotEvil
 
                 inBody = false;
 
+                // direction to shoot
                 if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                {
-                    Debug.Log("PC");
                     orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)am.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                }
                 else
-                {
-                    Debug.Log("Console");
                     orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                }
+                
 
                 orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
 
                 am = null;
+
+                vCam.SetTargetAndFollow(orb.transform);
             }
             else
             {
+                // allows for movement if not in a body xD
                 if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                {
-                    Debug.Log("PC");
                     orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                }
                 else
-                {
-                    Debug.Log("Console");
                     orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
-                }
             }
 
             // stop "aiming" & reset the pwoer value
