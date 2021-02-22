@@ -19,24 +19,25 @@ namespace TotallyNotEvil
         private void Start()
         {
             wait = new WaitForSeconds(.5f);
-            GetComponentsInChildren<CircleCollider2D>()[1].enabled = false;
         }
 
 
-        private void OnTriggerStay2D(Collider2D collision)
+        private void OnCollisionStay2D(Collision2D collision)
         {
             if (canPossess)
             {
-                Debug.Log("can possess");
-                if (collision.GetComponent<IPossessable>() != null)
+                // making a variable so it is easier to read (I use it like 3/4 times here so made sense).
+                IPossessable _poss = collision.gameObject.GetComponent<IPossessable>();
+
+                if (_poss != null)
                 {
-                    if (!collision.GetComponent<IPossessable>().IsPossessed)
+                    if (!_poss.IsPossessed)
                     {
                         Debug.Log("Possess Me!");
-                        collision.GetComponent<IPossessable>().IsPossessed = true;
+                        _poss.IsPossessed = true;
 
                         // set the player to control the hit IPossessable object.
-                        FindObjectOfType<PlayerController>().SetAm(collision.GetComponent<IPossessable>());
+                        FindObjectOfType<PlayerController>().SetAm(_poss);
 
                         // disables the orb
                         gameObject.SetActive(false);
@@ -55,7 +56,6 @@ namespace TotallyNotEvil
         /// </summary>
         public void Yeet(IPossessable was)
         {
-            StopAllCoroutines();
             StartCoroutine(ExitHostCooldown(was));
         }
 
@@ -68,8 +68,10 @@ namespace TotallyNotEvil
         {
             canPossess = false;
             yield return wait;
-            GetComponentsInChildren<CircleCollider2D>()[1].enabled = true;
+
+            // stops the old object from being defined as possessed.
             was.IsPossessed = false;
+
             canPossess = true;
         }
     }
