@@ -2,7 +2,7 @@
     "name": "Actions",
     "maps": [
         {
-            "name": "Pocess",
+            "name": "Possess",
             "id": "c67f2d26-efdc-431d-94e8-2ee8a4d84856",
             "actions": [
                 {
@@ -11,14 +11,14 @@
                     "id": "92930c68-3567-4ca3-a7ff-b34d6de7f9b8",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": "Press(behavior=2)"
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "ad945cef-83e8-4d53-b789-1a4220d9a4e6",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard/Mouse",

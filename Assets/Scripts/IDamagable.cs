@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace TotallyNotEvil
 {
-    public interface IPocessable
+    public interface IDamagable
     {
-        bool IsPocessed { get; set; }
-        GameObject obj { get; set; }
+        int Health { get; set; }
+        void TakeDamage(int dmg);
     }
 }

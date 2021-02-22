@@ -5,33 +5,16 @@ using UnityEngine;
 
 namespace TotallyNotEvil
 {
-    public class Person : MonoBehaviour, IPocessable
+    public class Person : MonoBehaviour, IPossessable
     {
-        public bool IsPocessed { get; set; }
-        public GameObject obj { get; set; }
+        [SerializeField] private bool _possessed;
+        public bool IsPossessed { get { return _possessed; } set { _possessed = value; } }
+        public GameObject GetGameObject { get; set; }
 
 
         private void Start()
         {
-            obj = this.gameObject;
-        }
-
-
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (IsPocessed)
-            {
-                if (collision.GetComponent<IPocessable>() != null)
-                {
-                    if (!collision.GetComponent<IPocessable>().IsPocessed)
-                    {
-                        Debug.Log("dkhfdjhf");
-                        collision.GetComponent<IPocessable>().IsPocessed = true;
-                        FindObjectOfType<PlayerController>().SetAm(collision.GetComponent<IPocessable>());
-                        gameObject.SetActive(false);
-                    }
-                }
-            }
+            GetGameObject = this.gameObject;
         }
     }
 }

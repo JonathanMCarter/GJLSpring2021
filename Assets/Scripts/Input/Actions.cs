@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Actions.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Scripts/Input/Actions.inputactions'
 
 using System;
 using System.Collections;
@@ -15,7 +15,7 @@ public class @Actions : IInputActionCollection, IDisposable
     ""name"": ""Actions"",
     ""maps"": [
         {
-            ""name"": ""Pocess"",
+            ""name"": ""Possess"",
             ""id"": ""c67f2d26-efdc-431d-94e8-2ee8a4d84856"",
             ""actions"": [
                 {
@@ -24,14 +24,14 @@ public class @Actions : IInputActionCollection, IDisposable
                     ""id"": ""92930c68-3567-4ca3-a7ff-b34d6de7f9b8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press""
+                    ""interactions"": ""Press(behavior=2)""
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""ad945cef-83e8-4d53-b789-1a4220d9a4e6"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard/Mouse"",
@@ -264,9 +264,9 @@ public class @Actions : IInputActionCollection, IDisposable
         }
     ]
 }");
-        // Pocess
-        m_Pocess = asset.FindActionMap("Pocess", throwIfNotFound: true);
-        m_Pocess_Shoot = m_Pocess.FindAction("Shoot", throwIfNotFound: true);
+        // Possess
+        m_Possess = asset.FindActionMap("Possess", throwIfNotFound: true);
+        m_Possess_Shoot = m_Possess.FindAction("Shoot", throwIfNotFound: true);
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
@@ -316,29 +316,29 @@ public class @Actions : IInputActionCollection, IDisposable
         asset.Disable();
     }
 
-    // Pocess
-    private readonly InputActionMap m_Pocess;
-    private IPocessActions m_PocessActionsCallbackInterface;
-    private readonly InputAction m_Pocess_Shoot;
-    public struct PocessActions
+    // Possess
+    private readonly InputActionMap m_Possess;
+    private IPossessActions m_PossessActionsCallbackInterface;
+    private readonly InputAction m_Possess_Shoot;
+    public struct PossessActions
     {
         private @Actions m_Wrapper;
-        public PocessActions(@Actions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Shoot => m_Wrapper.m_Pocess_Shoot;
-        public InputActionMap Get() { return m_Wrapper.m_Pocess; }
+        public PossessActions(@Actions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Shoot => m_Wrapper.m_Possess_Shoot;
+        public InputActionMap Get() { return m_Wrapper.m_Possess; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PocessActions set) { return set.Get(); }
-        public void SetCallbacks(IPocessActions instance)
+        public static implicit operator InputActionMap(PossessActions set) { return set.Get(); }
+        public void SetCallbacks(IPossessActions instance)
         {
-            if (m_Wrapper.m_PocessActionsCallbackInterface != null)
+            if (m_Wrapper.m_PossessActionsCallbackInterface != null)
             {
-                @Shoot.started -= m_Wrapper.m_PocessActionsCallbackInterface.OnShoot;
-                @Shoot.performed -= m_Wrapper.m_PocessActionsCallbackInterface.OnShoot;
-                @Shoot.canceled -= m_Wrapper.m_PocessActionsCallbackInterface.OnShoot;
+                @Shoot.started -= m_Wrapper.m_PossessActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_PossessActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_PossessActionsCallbackInterface.OnShoot;
             }
-            m_Wrapper.m_PocessActionsCallbackInterface = instance;
+            m_Wrapper.m_PossessActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Shoot.started += instance.OnShoot;
@@ -347,7 +347,7 @@ public class @Actions : IInputActionCollection, IDisposable
             }
         }
     }
-    public PocessActions @Pocess => new PocessActions(this);
+    public PossessActions @Possess => new PossessActions(this);
 
     // Movement
     private readonly InputActionMap m_Movement;
@@ -399,7 +399,7 @@ public class @Actions : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_XboxSchemeIndex];
         }
     }
-    public interface IPocessActions
+    public interface IPossessActions
     {
         void OnShoot(InputAction.CallbackContext context);
     }
