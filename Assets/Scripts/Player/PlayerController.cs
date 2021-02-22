@@ -218,7 +218,7 @@ namespace TotallyNotEvil
             if (!lr.enabled)
                 lr.enabled = true;
 
-            lr.SetPosition(0, am.transform.position);
+            lr.SetPosition(0, player.transform.position);
 
             if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
                 lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
