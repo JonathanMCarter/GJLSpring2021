@@ -9,7 +9,7 @@ namespace TotallyNotEvil
     {
         [Header("Currently In")]
         [Tooltip("The object the player currently controls")]
-        [SerializeField] private GameObject am;
+        [SerializeField] internal GameObject am;
 
         [Tooltip("Is the player in a body?")]
         [SerializeField] private bool inBody;
@@ -27,12 +27,14 @@ namespace TotallyNotEvil
         private InputDevice device;
         private Camera cam;
 
+        private IMoveable moveAM;
+
         // component ref
         private Rigidbody2D rb;
 
         // is the user aiming
         [SerializeField] private bool isAiming;
-
+        [SerializeField] private LayerMask mask;
 
         private void OnDisable()
         {
@@ -42,12 +44,17 @@ namespace TotallyNotEvil
         private void Awake()
         {
             actions = new Actions();
+
+            // Draw & Shoot
             actions.Possess.Shoot.started += Drawing;
             actions.Possess.Shoot.canceled += Release;
+
+            // Input Check
             InputSystem.onActionChange += (obj, change) =>
             {
                 ControllerChanged(obj, change);
             };
+
             actions.Enable();
         }
 
@@ -87,7 +94,14 @@ namespace TotallyNotEvil
                 else
                 {
                     // normal player movement (in possession of person/object/thing)
-                    rb.velocity = new Vector2(actions.Movement.Move.ReadValue<Vector2>().x, 0) * 2;
+                    if (moveAM == null) moveAM = am.GetComponent<IMoveable>();
+                    else
+                    {
+                        moveAM.MoveAction(actions.Movement.Move.ReadValue<Vector2>());
+
+                        if (actions.Movement.Jump.phase == InputActionPhase.Performed)
+                            moveAM.JumpAction();
+                    }
                 }
 
 
@@ -112,6 +126,17 @@ namespace TotallyNotEvil
                 //};
                 #endregion
             }
+            else
+            {
+                // oh dear.... take dmg & allow player to shoot again.
+                if (isAiming)
+                {
+                    power += Time.deltaTime * mulitplier;
+
+                    if (power > powerLimit)
+                        power = powerLimit;
+                }
+            }
         }
 
 
@@ -122,6 +147,7 @@ namespace TotallyNotEvil
         public void SetAm(IPossessable pos)
         {
             am = pos.GetGameObject;
+            if (am.GetComponent<IMoveable>() != null) moveAM = am.GetComponent<IMoveable>();
             rb = am.GetComponent<Rigidbody2D>();
             inBody = true;
         }
@@ -143,31 +169,46 @@ namespace TotallyNotEvil
         /// <param name="ctx"></param>
         private void Release(InputAction.CallbackContext ctx)
         {
-            inBody = false;
-
             // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
-            Physics2D.IgnoreCollision(orb.GetComponent<Collider2D>(), am.GetComponent<Collider2D>());
-
-            // yeet the player (orb) around
-            orb.SetActive(true);
-
-            orb.transform.position = am.transform.position;
-
-            if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+            if (inBody)
             {
-                Debug.Log("PC");
-                orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)am.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                Physics2D.IgnoreCollision(orb.GetComponent<Collider2D>(), am.GetComponent<Collider2D>());
+
+                // yeet the player (orb) around
+                orb.SetActive(true);
+
+                orb.transform.position = am.transform.position;
+
+                inBody = false;
+
+                if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                {
+                    Debug.Log("PC");
+                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)am.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                }
+                else
+                {
+                    Debug.Log("Console");
+                    orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                }
+
+                orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
+
+                am = null;
             }
             else
             {
-                Debug.Log("Console");
-                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+                {
+                    Debug.Log("PC");
+                    orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                }
+                else
+                {
+                    Debug.Log("Console");
+                    orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                }
             }
-            
-
-            orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
-
-            am = null;
 
             // stop "aiming" & reset the pwoer value
             isAiming = false;
