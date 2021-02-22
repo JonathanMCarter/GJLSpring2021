@@ -24,6 +24,7 @@ namespace TotallyNotEvil
 
         [Header("Camera")]
         [SerializeField] private CameraController vCam;
+        [SerializeField] private Canvas arrow;
 
 
         private GameObject orb;
@@ -106,6 +107,8 @@ namespace TotallyNotEvil
                             moveAM.JumpAction();
                     }
                 }
+
+                arrow.transform.position = new Vector3(am.transform.position.x, am.transform.position.y + 1f, 0f);
             }
             else
             {
@@ -115,6 +118,8 @@ namespace TotallyNotEvil
                     IncreasePower();
                     AimingLine(orb);
                 }
+
+                arrow.transform.position = new Vector3(orb.transform.position.x, orb.transform.position.y + 1f, 0f);
             }
         }
 
@@ -130,6 +135,9 @@ namespace TotallyNotEvil
             rb = am.GetComponent<Rigidbody2D>();
             inBody = true;
             vCam.SetTargetAndFollow(am.transform);
+
+
+            if (am.GetComponent<IThinkable>() != null) ShowThought(am.GetComponent<IThinkable>());
         }
 
 
@@ -218,7 +226,7 @@ namespace TotallyNotEvil
             if (!lr.enabled)
                 lr.enabled = true;
 
-            lr.SetPosition(0, am.transform.position);
+            lr.SetPosition(0, player.transform.position);
 
             if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
                 lr.SetPosition(1, (Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()));
@@ -237,6 +245,13 @@ namespace TotallyNotEvil
                 orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)player.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
             else
                 orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+        }
+
+
+        private void ShowThought(IThinkable think)
+        {
+            if (!think.HasShownThought)
+                think.ShowBubble();
         }
     }
 }
