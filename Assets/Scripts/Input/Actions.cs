@@ -63,6 +63,14 @@ public class @Actions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""7afa68fd-7348-4fef-bfc7-c46adff2feb5"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""NormalizeVector2"",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -230,6 +238,17 @@ public class @Actions : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7e16273-935f-4b6b-9c7f-b22451c6fe1f"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard/Mouse"",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -270,6 +289,7 @@ public class @Actions : IInputActionCollection, IDisposable
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
+        m_Movement_MousePos = m_Movement.FindAction("MousePos", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -353,11 +373,13 @@ public class @Actions : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Movement;
     private IMovementActions m_MovementActionsCallbackInterface;
     private readonly InputAction m_Movement_Move;
+    private readonly InputAction m_Movement_MousePos;
     public struct MovementActions
     {
         private @Actions m_Wrapper;
         public MovementActions(@Actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Movement_Move;
+        public InputAction @MousePos => m_Wrapper.m_Movement_MousePos;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -370,6 +392,9 @@ public class @Actions : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
+                @MousePos.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnMousePos;
+                @MousePos.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnMousePos;
+                @MousePos.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnMousePos;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -377,6 +402,9 @@ public class @Actions : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @MousePos.started += instance.OnMousePos;
+                @MousePos.performed += instance.OnMousePos;
+                @MousePos.canceled += instance.OnMousePos;
             }
         }
     }
@@ -406,5 +434,6 @@ public class @Actions : IInputActionCollection, IDisposable
     public interface IMovementActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnMousePos(InputAction.CallbackContext context);
     }
 }

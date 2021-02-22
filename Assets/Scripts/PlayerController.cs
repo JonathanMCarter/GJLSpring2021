@@ -24,6 +24,9 @@ namespace TotallyNotEvil
 
         // input controls ref
         private Actions actions;
+        private InputDevice device;
+        //private Camera cam;
+
         // component ref
         private Rigidbody2D rb;
 
@@ -41,12 +44,17 @@ namespace TotallyNotEvil
             actions = new Actions();
             actions.Possess.Shoot.started += Drawing;
             actions.Possess.Shoot.canceled += Release;
+            InputSystem.onActionChange += (obj, change) =>
+            {
+                ControllerChanged(obj, change);
+            };
             actions.Enable();
         }
 
         private void Start()
         {
             rb = am.GetComponent<Rigidbody2D>();
+            //cam = Camera.main;
 
             // defines the object in at the start as possessed.
             am.GetComponent<IPossessable>().IsPossessed = true;
@@ -59,9 +67,13 @@ namespace TotallyNotEvil
         private void Update()
         {
             // for debugging only, can be removed if causing issues xD
-            if (am)
-                Debug.DrawLine(am.transform.position, actions.Movement.Move.ReadValue<Vector2>() * 10, Color.red);
-
+            //if (am)
+            //{
+            //    Debug.DrawLine(am.transform.position, actions.Movement.Move.ReadValue<Vector2>() * 10, Color.red);
+            //    Debug.DrawLine(am.transform.position, actions.Movement.MousePos.ReadValue<Vector2>() * 10, Color.blue);
+            //    Debug.DrawLine(am.transform.position, cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) * 10, Color.green);
+            //}
+            
 
             if (inBody)
             {
@@ -133,7 +145,7 @@ namespace TotallyNotEvil
         {
             inBody = false;
 
-            // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers, but keeping it in as it may be handy later on...)
+            // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
             Physics2D.IgnoreCollision(orb.GetComponent<Collider2D>(), am.GetComponent<Collider2D>());
 
             // yeet the player (orb) around
@@ -141,7 +153,17 @@ namespace TotallyNotEvil
 
             orb.transform.position = am.transform.position;
 
-            orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+            if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
+            {
+                Debug.Log("PC");
+                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.MousePos.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+            }
+            else
+            {
+                Debug.Log("Console");
+                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+            }
+            
 
             orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
 
@@ -150,6 +172,23 @@ namespace TotallyNotEvil
             // stop "aiming" & reset the pwoer value
             isAiming = false;
             power = 0f;
+        }
+
+
+        /// <summary>
+        /// Checks to see if the control input has changed (mostly for plugging in a controller etc).
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="change"></param>
+        private void ControllerChanged(object obj, InputActionChange change)
+        {
+            if (change == InputActionChange.ActionPerformed)
+            {
+                var inputAction = (InputAction)obj;
+                var lastControl = inputAction.activeControl;
+                device = lastControl.device;
+                Debug.Log(device.displayName);
+            }
         }
     }
 }
