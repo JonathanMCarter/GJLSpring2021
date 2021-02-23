@@ -8,13 +8,13 @@ namespace TotallyNotEvil.Interactions
     {
         [SerializeField] private Note note;
         private NoteUI noteUI;
-        private SpriteRenderer arrowSprite;
+        private GameObject arrowSprite;
 
 
         private void Start()
         {
             noteUI = GameObject.FindGameObjectWithTag("NoteUI").GetComponent<NoteUI>();
-            arrowSprite = GetComponentsInChildren<SpriteRenderer>()[1];
+            arrowSprite = transform.GetChild(0).gameObject;
         }
 
 
@@ -27,7 +27,7 @@ namespace TotallyNotEvil.Interactions
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Possessable")))
-                arrowSprite.enabled = true;
+                arrowSprite.SetActive(true);
         }
 
 
@@ -35,7 +35,7 @@ namespace TotallyNotEvil.Interactions
         {
             if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Possessable")))
             {
-                arrowSprite.enabled = false;
+                arrowSprite.SetActive(false);
                 FindObjectOfType<PlayerController>().interaction = null;
             }
         }

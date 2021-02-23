@@ -13,7 +13,7 @@ namespace TotallyNotEvil
         [SerializeField] internal GameObject am;
 
         [Tooltip("Is the player in a body?")]
-        [SerializeField] private bool inBody;
+        [SerializeField] internal bool inBody;
         [SerializeField] private float repossessionDelay = 1f;
 
         [Header("Movement Force")]
