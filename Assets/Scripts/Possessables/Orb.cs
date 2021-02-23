@@ -12,8 +12,13 @@ namespace TotallyNotEvil
 
         private PlayerController player;
 
+        // damage visual via vignette ideally (gonna work on it on weds)
+        [SerializeField] private UnityEngine.Rendering.Universal.Vignette vig;
+
         // Damage
         public int Health { get; set; }
+
+        private bool isCoR;
 
 
         private void OnDisable()
@@ -30,6 +35,22 @@ namespace TotallyNotEvil
         {
             wait = new WaitForSeconds(.5f);
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        }
+
+
+        private void Update()
+        {
+            if (!player.inBody && !isCoR)
+            {
+                StartCoroutine(DamageOverTime());
+            }
+
+
+            // if dead - die (will show a death ui)
+            if (Health <= 0)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
 
@@ -101,6 +122,15 @@ namespace TotallyNotEvil
         public void TakeDamage(int dmg)
         {
             Health -= dmg;
+        }
+
+
+        private IEnumerator DamageOverTime(float delay = 1f)
+        {
+            isCoR = true;
+            yield return new WaitForSeconds(delay);
+            TakeDamage(1);
+            isCoR = false;
         }
     }
 }
