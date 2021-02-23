@@ -8,11 +8,13 @@ namespace TotallyNotEvil.Interactions
     {
         [SerializeField] private Animator anim;
         private PlayerController player;
+        private LevelTransition trans;
 
 
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            trans = GetComponent<LevelTransition>();
         }
 
 
@@ -21,6 +23,7 @@ namespace TotallyNotEvil.Interactions
             Debug.Log("kfjdfj");
             anim.SetBool("LevelComplete", true);
             player.enabled = false;
+            trans.Transition();
         }
     }
 }
