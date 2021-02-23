@@ -23,13 +23,16 @@ namespace TotallyNotEvil
 
 
         private Rigidbody2D rb;
+        private PlayerController player;
 
         [SerializeField] private LayerMask mask;
+
 
         private void Start()
         {
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
 
 
@@ -61,6 +64,20 @@ namespace TotallyNotEvil
             {
                 return false;
             }
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.GetComponent<Interactions.IInteractable>() != null)
+                player.interaction = collision.GetComponent<Interactions.IInteractable>();
+        }
+
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.GetComponent<Interactions.IInteractable>() != null)
+                FindObjectOfType<PlayerController>().interaction = null;
         }
     }
 }

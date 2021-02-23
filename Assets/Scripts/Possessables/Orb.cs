@@ -10,6 +10,7 @@ namespace TotallyNotEvil
         private WaitForSeconds wait;
         [SerializeField] private bool canPossess;
 
+        private PlayerController player;
 
         // Damage
         public int Health { get; set; }
@@ -28,6 +29,7 @@ namespace TotallyNotEvil
         private void Start()
         {
             wait = new WaitForSeconds(.5f);
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
 
 
@@ -46,7 +48,7 @@ namespace TotallyNotEvil
                         _poss.IsPossessed = true;
 
                         // set the player to control the hit IPossessable object.
-                        FindObjectOfType<PlayerController>().SetAm(_poss);
+                        player.SetAm(_poss);
 
                         // disables the orb
                         gameObject.SetActive(false);
@@ -57,6 +59,13 @@ namespace TotallyNotEvil
                     }
                 }
             }
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.GetComponent<Interactions.IInteractable>() != null)
+                player.interaction = collision.GetComponent<Interactions.IInteractable>();
         }
 
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TotallyNotEvil
 {
-    [CreateAssetMenu(fileName = "New Thought", menuName = "TotallyNotEvil/Thought")]
+    [CreateAssetMenu(fileName = "New Thought", menuName = "Totally Not Evil/Thought")]
     public class Thought : ScriptableObject
     {
         [TextArea]
