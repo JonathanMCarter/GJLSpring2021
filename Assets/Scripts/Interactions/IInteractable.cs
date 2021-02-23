@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TotallyNotEvil
+namespace TotallyNotEvil.Interactions
 {
     public interface IInteractable
     {
