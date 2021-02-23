@@ -26,7 +26,6 @@ namespace TotallyNotEvil
         private PlayerController player;
 
         [SerializeField] private LayerMask mask;
-        [SerializeField] private LayerMask toIgnore;
 
 
         private void Start()
@@ -72,6 +71,13 @@ namespace TotallyNotEvil
         {
             if (collision.GetComponent<Interactions.IInteractable>() != null)
                 player.interaction = collision.GetComponent<Interactions.IInteractable>();
+        }
+
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.GetComponent<Interactions.IInteractable>() != null)
+                FindObjectOfType<PlayerController>().interaction = null;
         }
     }
 }

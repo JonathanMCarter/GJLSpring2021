@@ -45,22 +45,17 @@ namespace TotallyNotEvil.Dialogue
         [SerializeField] private Text dialText;
 
         // Int to check which element in the Dialogue list is next to be displayed
-        private int dialStage = 0;
+        [SerializeField] private int dialStage = 0;
 
         // Checks is a courutine is running or not
-        private bool isCoR;
+        [SerializeField] private bool isCoR;
 
         public Styles displayStyle;
 
         [SerializeField] private bool inputPressed;
         [SerializeField] private bool requireInput = true;
         [SerializeField] internal bool fileHasEnded = false;
-
-        [Header("Characters used to define file read settings")]
-        [Tooltip("This should match what you inputted into the 'File Read Settings' char after name, which controls where a story character's name ends in the dialouge files the script reads.")]
-        [SerializeField] private string nameChar = ":";
-        [Tooltip("This should match what you inputted into the 'File Read Settings' char for new line, which controls where a story character's line of dialouge ends and a new one begins.")]
-        [SerializeField] private string newLineChar = "#";
+        private bool hasReadLine;
 
         [Header("Type Writer Settings")]
         [SerializeField] private int typeWriterCount = 1;
@@ -68,30 +63,22 @@ namespace TotallyNotEvil.Dialogue
 
         // Stuff for events 'n' stuff 
         [SerializeField] private Coroutine pauseCo;
-        [SerializeField] private Animator animToPlay;
+
+
+        private void Start()
+        {
+            hasReadLine = true;
+        }
 
 
         private void Update()
         {
             if (requireInput)
             {
-                switch (displayStyle)
+                if (!isCoR && !hasReadLine)
                 {
-                    case Styles.Default:
-
-                        if (inputPressed)
-                            DisplayNextLine();
-
-                        break;
-
-                    case Styles.TypeWriter:
-
-                        if ((!isCoR) && (inputPressed))
-                            StartCoroutine(TypeWriter(.005f));
-
-                        break;
-                    default:
-                        break;
+                    Debug.Log("type");
+                    StartCoroutine(TypeWriter(.005f));
                 }
             }
         }
@@ -108,37 +95,16 @@ namespace TotallyNotEvil.Dialogue
         // Reads the next line of the dialogue sequence
         public void DisplayNextLine()
         {
+            hasReadLine = false;
+
             if (dialStage < file.names.Count)
             {
-                switch (file.names[dialStage])
+                if (displayStyle.Equals(Styles.Default))
                 {
-                    // Pause
-                    case "@@@":
-                        // Pauses dialogue for a little bit (for dramatic effect..............................................)
-                        if (pauseCo == null)
-                            pauseCo = StartCoroutine(PauseDial(3));
-
-                        break;
-
-                    // Play Animation
-                    case "^^^":
-                        // Put code to play animation
-                        animToPlay.Play(file.dialogue[dialStage], -1);
-                        break;
-
-                    // End Dialogue
-                    case "***":
-                        dialStage = 0;
-                        fileHasEnded = true;
-                        break;
-
-                    // Read Dial as normal
-                    default:
-                        dialName.text = file.names[dialStage];
-                        dialText.text = file.dialogue[dialStage];
-                        dialStage++;
-                        inputPressed = false;
-                        break;
+                    dialName.text = file.names[dialStage];
+                    dialText.text = file.dialogue[dialStage];
+                    dialStage++;
+                    inputPressed = false;
                 }
             }
             else
@@ -156,7 +122,7 @@ namespace TotallyNotEvil.Dialogue
 
             string _sentence = "";
 
-            if (dialStage < file.names.Count)
+            if (dialStage <= file.names.Count)
             {
                 if (file.dialogue[dialStage] != null)
                 {
@@ -170,6 +136,8 @@ namespace TotallyNotEvil.Dialogue
                     inputPressed = false;
                     dialStage++;
                     typeWriterCount = 0;
+                    hasReadLine = true;
+                    StartCoroutine(WaitToHide());
                 }
                 else
                 {
@@ -190,6 +158,12 @@ namespace TotallyNotEvil.Dialogue
             isCoR = false;
         }
 
+        private IEnumerator WaitToHide()
+        {
+            yield return new WaitForSeconds(2f);
+            dialName.text = "";
+            dialText.text = "";
+        }
 
 
         public void Input()
@@ -204,13 +178,6 @@ namespace TotallyNotEvil.Dialogue
             if (inputPressed) { inputPressed = false; }
             if (fileHasEnded) { fileHasEnded = false; }
             dialStage = 0;
-        }
-
-
-        private IEnumerator PauseDial(float Delay)
-        {
-            yield return new WaitForSeconds(Delay);
-            ++dialStage;
         }
     }
 }

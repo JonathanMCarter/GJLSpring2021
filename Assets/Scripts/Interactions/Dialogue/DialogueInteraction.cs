@@ -13,14 +13,15 @@ namespace TotallyNotEvil.Interactions
         [SerializeField] private Canvas dialCanvas;
 
         private DialogueScript dial;
-        private bool dialActive;
         private Actions actions;
+        [SerializeField] private PlayerController player;
+        [SerializeField] private bool canTalk = false;
 
 
         private void OnEnable()
         {
             actions = new Actions();
-            actions.Movement.Jump.performed += ProgressDialogue;
+            actions.Movement.Interact.performed += ProgressDialogue;
             actions.Enable();
         }
 
@@ -46,8 +47,40 @@ namespace TotallyNotEvil.Interactions
 
         public void ProgressDialogue(InputAction.CallbackContext ctx)
         {
-            if (!dial.fileHasEnded)
-                dial.Input();
+            if (canTalk)
+            {
+                if (!dial.fileHasEnded)
+                    dial.Input();
+                else
+                {
+                    dial.Reset();
+                    dial.Input();
+                }
+            }
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.GetComponent<IPossessable>() != null)
+            {
+                if (collision.GetComponent<IPossessable>().IsPossessed)
+                {
+                    canTalk = true;
+                }
+            }
+        }
+
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.GetComponent<IPossessable>() != null)
+            {
+                if (collision.GetComponent<IPossessable>().IsPossessed)
+                {
+                    canTalk =false;
+                }
+            }
         }
     }
 }

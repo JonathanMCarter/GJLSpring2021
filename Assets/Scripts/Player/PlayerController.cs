@@ -62,7 +62,7 @@ namespace TotallyNotEvil
             actions.Possess.Shoot.canceled += Release;
 
             // interactions
-            actions.Movement.Jump.performed += UseInteraction;
+            actions.Movement.Interact.performed += UseInteraction;
 
             // Input Check
             InputSystem.onActionChange += (obj, change) =>
@@ -114,7 +114,7 @@ namespace TotallyNotEvil
                             moveAM.JumpAction();
                             //Debug.Log("jumped");
                         }
-                    }
+                    } 
                 }
 
                 arrow.transform.position = new Vector3(am.transform.position.x, am.transform.position.y + 1f, 0f);
