@@ -18,7 +18,8 @@ namespace TotallyNotEvil.Interactions
 
         public void Interact()
         {
-            anim.SetBool("LevelCompleted", true);
+            Debug.Log("kfjdfj");
+            anim.SetBool("LevelComplete", true);
             player.enabled = false;
         }
     }
