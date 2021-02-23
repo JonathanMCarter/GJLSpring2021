@@ -13,6 +13,7 @@ namespace TotallyNotEvil
 
         [Tooltip("Is the player in a body?")]
         [SerializeField] private bool inBody;
+        [SerializeField] float repossessionDelay = 1f;
 
         [Header("Movement Force")]
         [SerializeField] private float power;
@@ -104,7 +105,10 @@ namespace TotallyNotEvil
                         moveAM.MoveAction(actions.Movement.Move.ReadValue<Vector2>());
 
                         if (actions.Movement.Jump.phase == InputActionPhase.Performed)
+                        {
                             moveAM.JumpAction();
+                            //Debug.Log("jumped");
+                        }
                     }
                 }
 
@@ -159,8 +163,14 @@ namespace TotallyNotEvil
         {
             if (inBody)
             {
+                Collider2D orbCollider = orb.GetComponent<Collider2D>();
+                Collider2D amCollider = am.GetComponent<Collider2D>();
                 // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
-                Physics2D.IgnoreCollision(orb.GetComponent<Collider2D>(), am.GetComponent<Collider2D>());
+                Physics2D.IgnoreCollision(orbCollider, amCollider);
+
+                // CARSON -> experimental : allows player to possess the same entity twice (after waiting a short amount of time
+                StartCoroutine(IgnoreCollisionFalse(orbCollider, amCollider));
+
 
                 // yeet the player (orb) around
                 orb.SetActive(true);
@@ -187,6 +197,11 @@ namespace TotallyNotEvil
             power = 0f;
         }
 
+        private IEnumerator IgnoreCollisionFalse(Collider2D colliderA, Collider2D colliderB) {
+            yield return new WaitForSeconds(repossessionDelay);
+            Physics2D.IgnoreCollision(colliderA, colliderB, false);
+        }
+
 
         /// <summary>
         /// Checks to see if the control input has changed (mostly for plugging in a controller etc).
@@ -200,7 +215,7 @@ namespace TotallyNotEvil
                 var inputAction = (InputAction)obj;
                 var lastControl = inputAction.activeControl;
                 device = lastControl.device;
-                Debug.Log(device.displayName);
+                //Debug.Log(device.displayName);
             }
         }
 
@@ -223,6 +238,16 @@ namespace TotallyNotEvil
         /// <param name="player">What the player currently is</param>
         private void AimingLine(GameObject player)
         {
+
+            // set the amount of alpha (transparency) equal to the proportion of power to power-limit, 
+            // giving our player a visual indicator of how much power is going to be exerted in their shot
+            float powerProportion = power / powerLimit;
+            powerProportion = powerProportion * powerProportion; // this should make the player disinclined toward low-power
+            Color lineColor = lr.endColor;
+            lineColor.a = powerProportion;
+            lr.endColor = lineColor;
+
+
             if (!lr.enabled)
                 lr.enabled = true;
 
