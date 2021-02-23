@@ -13,7 +13,7 @@ namespace TotallyNotEvil
 
         [Tooltip("Is the player in a body?")]
         [SerializeField] private bool inBody;
-        [SerializeField] float repossessionDelay = 1f;
+        [SerializeField] private float repossessionDelay = 1f;
 
         [Header("Movement Force")]
         [SerializeField] private float power;
@@ -163,13 +163,13 @@ namespace TotallyNotEvil
         {
             if (inBody)
             {
-                Collider2D orbCollider = orb.GetComponent<Collider2D>();
-                Collider2D amCollider = am.GetComponent<Collider2D>();
+                Collider2D _orbCollider = orb.GetComponent<Collider2D>();
+                Collider2D _amCollider = am.GetComponent<Collider2D>();
                 // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
-                Physics2D.IgnoreCollision(orbCollider, amCollider);
+                Physics2D.IgnoreCollision(_orbCollider, _amCollider);
 
                 // CARSON -> experimental : allows player to possess the same entity twice (after waiting a short amount of time
-                StartCoroutine(IgnoreCollisionFalse(orbCollider, amCollider));
+                StartCoroutine(IgnoreCollisionFalse(_orbCollider, _amCollider));
 
 
                 // yeet the player (orb) around
@@ -197,7 +197,8 @@ namespace TotallyNotEvil
             power = 0f;
         }
 
-        private IEnumerator IgnoreCollisionFalse(Collider2D colliderA, Collider2D colliderB) {
+        private IEnumerator IgnoreCollisionFalse(Collider2D colliderA, Collider2D colliderB) 
+        {
             yield return new WaitForSeconds(repossessionDelay);
             Physics2D.IgnoreCollision(colliderA, colliderB, false);
         }
@@ -273,6 +274,10 @@ namespace TotallyNotEvil
         }
 
 
+        /// <summary>
+        /// Shows the thought bubble if the possessec person has one and hasn't shown it before.
+        /// </summary>
+        /// <param name="think">The thought to pass through.</param>
         private void ShowThought(IThinkable think)
         {
             if (!think.HasShownThought)
