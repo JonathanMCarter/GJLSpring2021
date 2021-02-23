@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TotallyNotEvil.Interactions;
 
 namespace TotallyNotEvil
 {
@@ -37,6 +38,7 @@ namespace TotallyNotEvil
         private LineRenderer lr;
 
         private IMoveable moveAM;
+        internal IInteractable interaction;
 
         // component ref
         private Rigidbody2D rb;
@@ -58,6 +60,9 @@ namespace TotallyNotEvil
             // Draw & Shoot
             actions.Possess.Shoot.started += Drawing;
             actions.Possess.Shoot.canceled += Release;
+
+            // interactions
+            actions.Movement.Jump.performed += UseInteraction;
 
             // Input Check
             InputSystem.onActionChange += (obj, change) =>
@@ -126,6 +131,16 @@ namespace TotallyNotEvil
                 arrow.transform.position = new Vector3(orb.transform.position.x, orb.transform.position.y + 1f, 0f);
             }
         }
+
+
+        internal void UseInteraction(InputAction.CallbackContext ctx)
+        {
+            if (interaction != null)
+            {
+                interaction.Interact();
+            }
+        }
+
 
 
         /// <summary>

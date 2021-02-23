@@ -14,19 +14,25 @@ namespace TotallyNotEvil.Interactions
         private Actions actions;
 
 
+        private void OnEnable()
+        {
+            actions = new Actions();
+            actions.Movement.Back.performed += Back;
+            actions.Enable();
+        }
+
+
+        private void OnDisable()
+        {
+            actions.Disable();
+        }
+
+
         private void Start()
         {
             canvas = GetComponent<Canvas>();
             noteText = GetComponentsInChildren<Text>()[0];
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        }
-
-
-        private void Update()
-        {
-            if (canvas.enabled)
-                if (actions.Movement.Back.phase == InputActionPhase.Performed)
-                    CloseNote();
         }
 
 
@@ -42,6 +48,13 @@ namespace TotallyNotEvil.Interactions
         {
             canvas.enabled = false;
             player.enabled = true;
+        }
+
+
+        private void Back(InputAction.CallbackContext ctx)
+        {
+            if (canvas.enabled)
+                CloseNote();
         }
     }
 }

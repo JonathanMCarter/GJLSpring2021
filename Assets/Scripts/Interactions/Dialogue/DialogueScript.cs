@@ -38,11 +38,11 @@ namespace TotallyNotEvil.Dialogue
         // References to the displayed name and text area
         [Header("UI Element For Story Character Name")]
         [Tooltip("The UI Text element that is going to be used in your project to hold the Story Characters Name when they are talking.")]
-        public Text dialName;
+        [SerializeField] private Text dialName;
 
         [Header("UI Element that holds the character dialogue")]
         [Tooltip("The UI Text element that is going to hold the lines of dialouge for you story charcters.")]
-        public Text dialText;
+        [SerializeField] private Text dialText;
 
         // Int to check which element in the Dialogue list is next to be displayed
         private int dialStage = 0;
@@ -52,23 +52,23 @@ namespace TotallyNotEvil.Dialogue
 
         public Styles displayStyle;
 
-        public bool inputPressed;
-        public bool requireInput = true;
-        public bool fileHasEnded = false;
+        [SerializeField] private bool inputPressed;
+        [SerializeField] private bool requireInput = true;
+        [SerializeField] internal bool fileHasEnded = false;
 
         [Header("Characters used to define file read settings")]
         [Tooltip("This should match what you inputted into the 'File Read Settings' char after name, which controls where a story character's name ends in the dialouge files the script reads.")]
-        public string nameChar = ":";
+        [SerializeField] private string nameChar = ":";
         [Tooltip("This should match what you inputted into the 'File Read Settings' char for new line, which controls where a story character's line of dialouge ends and a new one begins.")]
-        public string newLineChar = "#";
+        [SerializeField] private string newLineChar = "#";
 
         [Header("Type Writer Settings")]
-        public int typeWriterCount = 1;
+        [SerializeField] private int typeWriterCount = 1;
 
 
         // Stuff for events 'n' stuff 
-        private Coroutine pauseCo;
-        public Animator animToPlay;
+        [SerializeField] private Coroutine pauseCo;
+        [SerializeField] private Animator animToPlay;
 
 
         private void Update()
@@ -83,6 +83,7 @@ namespace TotallyNotEvil.Dialogue
                             DisplayNextLine();
 
                         break;
+
                     case Styles.TypeWriter:
 
                         if ((!isCoR) && (inputPressed))
@@ -193,7 +194,6 @@ namespace TotallyNotEvil.Dialogue
 
         public void Input()
         {
-            // if (!InputPressed) { InputPressed = true; }
             DisplayNextLine();
         }
 

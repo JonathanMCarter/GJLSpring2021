@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Thoughts
   - NoteUI
+  - Dialogue
   layers:
   - Default
   - TransparentFX
