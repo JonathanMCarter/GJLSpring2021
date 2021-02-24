@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98c1ac5c71c47646abdc0ac00289cd7, type: 3}
+  m_Name: Note-Experiement Log 2
+  m_EditorClassIdentifier: 
+  noteContents: "I\u2019m so close!\r\n\nI managed to manifest a soul for a full
+    five minutes before it appeared to dissipate. \r\n\nSomething appears to be causing
+    them to dissolve from existence. \r\n\nFascinating but infuriating. \r\n\nAnd
+    to make it worse, I\u2019m almost out of bodies due to the contract dispute.
+    \r\n\nI will have words. This needs to be finished. \r\n\n- E Coyle\r"

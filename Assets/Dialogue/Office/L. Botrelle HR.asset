@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a23a87367896a84192d8d539b81b139, type: 3}
+  m_Name: L. Botrelle HR
+  m_EditorClassIdentifier: 
+  names:
+  - L. Botrelle *Thought*
+  - L. Botrelle *Thought*
+  dialogue:
+  - "\u201CAd posted. Should have another intern by the end of the week.\""
+  - "\"Might even keep this one alive if Guerra can keep a lid on his enthusiasm
+    about the \u2018New Product\u2019 from that Project Lazarus thing.\u201D"
+  durationToShow:
+  - 4.5
+  - 7.5
+  timeUntilHide: 1.5
