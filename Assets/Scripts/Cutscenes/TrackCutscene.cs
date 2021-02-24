@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using TotallyNotEvil.Dialogue;
 
 namespace TotallyNotEvil
 {
@@ -12,11 +13,18 @@ namespace TotallyNotEvil
         [SerializeField] private CinemachineVirtualCamera cam;
         [SerializeField] private GameObject toFollowAfter;
 
+        // Dialouge to play during cutscene.
+        [SerializeField] private DialogueFile file;
+        [SerializeField] private DialogueScript dial;
+
+
+        // ICutscene
         [SerializeField] private Vector3[] _positions;
         public Vector3[] Positions { get { return _positions; } set { _positions = value; } }
 
         public bool IsCutsceneRunning { get; set; }
-
+        [SerializeField] private Tutorial tut;
+        private bool tutorialCalled;
 
         private void Start()
         {
@@ -25,11 +33,23 @@ namespace TotallyNotEvil
         }
 
 
+        private void Update()
+        {
+            if (!IsCutsceneRunning && !tutorialCalled)
+            {
+                tut.ProgressTutorial();
+                tutorialCalled = true;
+            }
+        }
+
+
         public void StartCutscene()
         {
             transform.position = _positions[0];
             IsCutsceneRunning = true;
             StartCoroutine(LerpToPosition());
+            dial.ChangeFile(file);
+            dial.AutoDial();
         }
 
 

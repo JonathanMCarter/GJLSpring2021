@@ -227,7 +227,7 @@ namespace TotallyNotEvil.Dialogue
             }
             else
             {
-                yield return new WaitForSeconds(file.durationToShow[_lineCount - 1]);
+                yield return new WaitForSeconds(file.timeUntilHide);
                 dialName.text = "";
                 dialText.text = "";
             }
