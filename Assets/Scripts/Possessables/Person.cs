@@ -27,18 +27,38 @@ namespace TotallyNotEvil
 
         [SerializeField] private LayerMask mask;
 
+        [Header("AI Stuff")]
+        [SerializeField] private Vector2[] range;
+        [SerializeField] private Vector2 posToMoveTo;
+        [SerializeField] private bool canMove;
 
         private void Start()
         {
+            canMove = true;
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
 
 
+        private void Update()
+        {
+            if (!IsPossessed && canMove)
+            {
+                // AI movement
+                posToMoveTo = new Vector2(Random.Range(range[0].x, range[1].x), transform.position.y);
+                StartCoroutine(ChooseMovePos());
+                MoveAction(posToMoveTo);
+            }
+        }
+
+
         public void MoveAction(Vector2 dir)
         {
-            rb.velocity = new Vector2(dir.x * MoveSpeed, rb.velocity.y);
+            if (IsPossessed)
+                rb.velocity = new Vector2(dir.x * MoveSpeed, rb.velocity.y);
+            else
+                rb.position = Vector2.Lerp(transform.position, posToMoveTo, 5 * Time.deltaTime);
         }
 
 
@@ -78,6 +98,14 @@ namespace TotallyNotEvil
         {
             if (collision.GetComponent<Interactions.IInteractable>() != null)
                 FindObjectOfType<PlayerController>().interaction = null;
+        }
+
+
+        private IEnumerator ChooseMovePos()
+        {
+            canMove = true;
+            yield return new WaitForSeconds(Random.Range(2, 7));
+            canMove = false;
         }
     }
 }
