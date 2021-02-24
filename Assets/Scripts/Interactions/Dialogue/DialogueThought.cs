@@ -25,6 +25,7 @@ namespace TotallyNotEvil.Dialogue
             {
                 dial.ChangeFile(file);
                 dial.AutoDial();
+                hasSeenThought = true;
             }
         }
     }
