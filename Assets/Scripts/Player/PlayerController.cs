@@ -305,5 +305,14 @@ namespace TotallyNotEvil
             // needs to be a version of dialogue interaction with a bool that stops it, and the runs when possessed automatically when possessed.
             thought.ShowThought();
         }
+
+
+        public void HurtPlayer(int dmg)
+        {
+            if (am.GetComponent<IDamagable>().CanTakeDamage)
+            {
+                am.GetComponent<IDamagable>().Health -= dmg;
+            }
+        }
     }
 }

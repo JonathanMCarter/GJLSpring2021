@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a23a87367896a84192d8d539b81b139, type: 3}
+  m_Name: B. Weaver - Bosses PA
+  m_EditorClassIdentifier: 
+  names:
+  - B. Weaver *Thought*
+  - B. Weaver *Thought*
+  dialogue:
+  - "\u201CI\u2019ve been calling funeral directors all day.\""
+  - "\"If we can\u2019t find anymore dead people to test Project Lazarus on, Morton\u2019s
+    definitely going to make me put cyanide in another intern\u2019s coffee.\u201D"
+  durationToShow:
+  - 4
+  - 6
+  timeUntilHide: 0
