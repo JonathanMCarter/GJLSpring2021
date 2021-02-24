@@ -64,6 +64,11 @@ namespace TotallyNotEvil.Dialogue
         // Stuff for events 'n' stuff 
         [SerializeField] private Coroutine pauseCo;
 
+        // auto dial stuff
+        int _lineCount = 0;
+        int _placeInLine = 0;
+        string _sentence = "";
+
 
         private void Start()
         {
@@ -186,6 +191,48 @@ namespace TotallyNotEvil.Dialogue
             if (inputPressed) { inputPressed = false; }
             if (fileHasEnded) { fileHasEnded = false; }
             dialStage = 0;
+        }
+
+
+        public void AutoDial()
+        {
+            _lineCount = 0;
+            _placeInLine = 0;
+            StartCoroutine(ShowDialAuto());
+        }
+
+
+
+        private IEnumerator ShowDialAuto()
+        {
+            if (file.dialogue.Count > _lineCount)
+            {
+                if (file.dialogue[_lineCount] == _sentence)
+                {
+                    _lineCount++;
+                    _sentence = "";
+                    _placeInLine = 0;
+                    yield return new WaitForSeconds(file.durationToShow[_lineCount - 1]);
+                    StartCoroutine(ShowDialAuto());
+                }
+                else
+                {
+                    _sentence = file.dialogue[_lineCount].Substring(0, _placeInLine);
+                    dialName.text = file.names[_lineCount];
+                    dialText.text = _sentence;
+                    _placeInLine++;
+                    yield return new WaitForSeconds(.025f);
+                    StartCoroutine(ShowDialAuto());
+                }
+            }
+            else
+            {
+                yield return new WaitForSeconds(file.durationToShow[_lineCount - 1]);
+                dialName.text = "";
+                dialText.text = "";
+            }
+
+            yield break;
         }
     }
 }
