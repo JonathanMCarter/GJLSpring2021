@@ -23,7 +23,7 @@ namespace TotallyNotEvil
         public Vector3[] Positions { get { return _positions; } set { _positions = value; } }
 
         public bool IsCutsceneRunning { get; set; }
-        [SerializeField] private Tutorial tut;
+        [SerializeField] private Sequences.SequenceReader tut;
         private bool tutorialCalled;
 
         private void Start()
@@ -40,6 +40,9 @@ namespace TotallyNotEvil
                 tut.ProgressTutorial();
                 tutorialCalled = true;
             }
+
+            if (!toFollowAfter)
+                toFollowAfter = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().am;
         }
 
 

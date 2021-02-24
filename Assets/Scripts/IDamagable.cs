@@ -6,6 +6,7 @@ namespace TotallyNotEvil
 {
     public interface IDamagable
     {
+        bool CanTakeDamage { get; set; }
         int Health { get; set; }
         void TakeDamage(int dmg);
     }

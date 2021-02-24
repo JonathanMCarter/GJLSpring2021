@@ -6,7 +6,7 @@ using TotallyNotEvil.Dialogue;
 
 namespace TotallyNotEvil
 {
-    public enum SequenceElements { None = 0, Dialogue, UIPrompt }
+    public enum SequenceElements { None = 0, Dialogue, UIPrompt, Function }
     public interface ILevelSequence
     {
         SequenceElements[] Sequence { get; set; }
@@ -16,5 +16,6 @@ namespace TotallyNotEvil
         bool SequenceComplete { get; set; }
         bool CanProgress { get; set; }
         void RunCooldown(int pos);
+        void Function();
     }
 }

@@ -16,6 +16,7 @@ namespace TotallyNotEvil
         [SerializeField] private UnityEngine.Rendering.Universal.Vignette vig;
 
         // Damage
+        public bool CanTakeDamage { get; set; }
         public int Health { get; set; }
 
         private bool isCoR;
@@ -33,6 +34,7 @@ namespace TotallyNotEvil
 
         private void Start()
         {
+            CanTakeDamage = false;
             wait = new WaitForSeconds(.5f);
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         }
@@ -40,13 +42,16 @@ namespace TotallyNotEvil
 
         private void Update()
         {
+            Debug.Log(CanTakeDamage + " : " + Health);
+
             if (!player.inBody && !isCoR)
             {
-                StartCoroutine(DamageOverTime());
+                if (CanTakeDamage)
+                    StartCoroutine(DamageOverTime());
             }
 
 
-            // if dead - die (will show a death ui)
+            // if dead - die (will show a death ui eventually)
             if (Health <= 0)
             {
                 gameObject.SetActive(false);

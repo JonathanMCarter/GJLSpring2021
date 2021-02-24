@@ -15,6 +15,7 @@ namespace TotallyNotEvil
         [Tooltip("Is the player in a body?")]
         [SerializeField] internal bool inBody;
         [SerializeField] private float repossessionDelay = 1f;
+        [SerializeField] private bool startAsOrb;
 
         [Header("Movement Force")]
         [SerializeField] private float power;
@@ -76,17 +77,24 @@ namespace TotallyNotEvil
 
         private void Start()
         {
+            // Sets up the orb
+            orb = Instantiate(orbPrefab);
+            orb.SetActive(false);
+
+            if (startAsOrb)
+            {
+                orb.SetActive(true);
+                am = orb;
+            }
+
+            // Defines the object in at the start as possessed.
+            if (am.GetComponent<IPossessable>() != null)
+                am.GetComponent<IPossessable>().IsPossessed = true;
+
             // References
             rb = am.GetComponent<Rigidbody2D>();
             cam = Camera.main;
             lr = GetComponent<LineRenderer>();
-
-            // Defines the object in at the start as possessed.
-            am.GetComponent<IPossessable>().IsPossessed = true;
-
-            // Sets up the orb
-            orb = Instantiate(orbPrefab);
-            orb.SetActive(false);
         }
 
 
@@ -185,7 +193,6 @@ namespace TotallyNotEvil
 
                 // CARSON -> experimental : allows player to possess the same entity twice (after waiting a short amount of time
                 StartCoroutine(IgnoreCollisionFalse(_orbCollider, _amCollider));
-
 
                 // yeet the player (orb) around
                 orb.SetActive(true);
