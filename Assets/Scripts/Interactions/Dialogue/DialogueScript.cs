@@ -115,6 +115,8 @@ namespace TotallyNotEvil.Dialogue
             }
         }
 
+
+
         // Display Option - Type Writer Style
         private IEnumerator TypeWriter(float delay)
         {
@@ -137,7 +139,6 @@ namespace TotallyNotEvil.Dialogue
                     dialStage++;
                     typeWriterCount = 0;
                     hasReadLine = true;
-                    StartCoroutine(WaitToHide());
                 }
                 else
                 {
@@ -158,12 +159,19 @@ namespace TotallyNotEvil.Dialogue
             isCoR = false;
         }
 
+
+
         private IEnumerator WaitToHide()
         {
-            yield return new WaitForSeconds(2f);
+            if (file.durationToShow != null && file.durationToShow[dialStage] > 0)
+                yield return new WaitForSeconds(file.durationToShow[dialStage]);
+            else
+                yield return new WaitForSeconds(2f);
+
             dialName.text = "";
             dialText.text = "";
         }
+
 
 
         public void Input()

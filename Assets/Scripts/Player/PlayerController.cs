@@ -154,9 +154,6 @@ namespace TotallyNotEvil
             rb = am.GetComponent<Rigidbody2D>();
             inBody = true;
             vCam.SetTargetAndFollow(am.transform);
-
-
-            if (am.GetComponent<IThinkable>() != null) ShowThought(am.GetComponent<IThinkable>());
         }
 
 
@@ -290,13 +287,12 @@ namespace TotallyNotEvil
 
 
         /// <summary>
-        /// Shows the thought bubble if the possessec person has one and hasn't shown it before.
+        /// Shows the thought bubble if the possess person has one and hasn't shown it before.
         /// </summary>
         /// <param name="think">The thought to pass through.</param>
-        private void ShowThought(IThinkable think)
+        private void ShowThought(IInteractable think)
         {
-            if (!think.HasShownThought)
-                think.ShowBubble();
+            // needs to be a version of dialogue interaction with a bool that stops it, and the runs when possessed automatically when possessed.
         }
     }
 }

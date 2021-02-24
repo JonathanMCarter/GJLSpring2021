@@ -21,5 +21,6 @@ namespace TotallyNotEvil.Dialogue
     {
         public List<string> names;
         public List<string> dialogue;
+        public List<float> durationToShow;
     }
 }

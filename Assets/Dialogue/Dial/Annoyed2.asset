@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6afb459e941a174cbc65b15e700351b, type: 3}
-  m_Name: Test
+  m_Script: {fileID: 11500000, guid: 0a23a87367896a84192d8d539b81b139, type: 3}
+  m_Name: Annoyed2
   m_EditorClassIdentifier: 
-  thoughtText: I'm thinking of a number between...
+  names:
+  - Emplyee
+  dialogue:
+  - What are you doing?
