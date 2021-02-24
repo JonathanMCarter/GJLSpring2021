@@ -67,6 +67,7 @@ namespace TotallyNotEvil.Interactions
                 if (collision.GetComponent<IPossessable>().IsPossessed)
                 {
                     canTalk = true;
+                    dial.ChangeFile(dialogueFile);
                 }
             }
         }
@@ -78,7 +79,7 @@ namespace TotallyNotEvil.Interactions
             {
                 if (collision.GetComponent<IPossessable>().IsPossessed)
                 {
-                    canTalk =false;
+                    canTalk = false;
                 }
             }
         }

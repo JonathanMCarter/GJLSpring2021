@@ -16,13 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 42d23f0bde9a07f45882b959b679c347
-  m_SerializeEntries:
-  - m_GUID: e444a0dcf56f3214ab57920a98b21b61
-    m_Address: UI/TextBubble
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 5266085800471068136, guid: e444a0dcf56f3214ab57920a98b21b61, type: 3}
-    m_TargetAsset: {fileID: 5266085800471068136, guid: e444a0dcf56f3214ab57920a98b21b61, type: 3}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: d658275bdd3a36346bdccc0884f2ddb4, type: 2}
   m_SchemaSet:

@@ -64,6 +64,11 @@ namespace TotallyNotEvil.Dialogue
         // Stuff for events 'n' stuff 
         [SerializeField] private Coroutine pauseCo;
 
+        // auto dial stuff
+        int _lineCount = 0;
+        int _placeInLine = 0;
+        string _sentence = "";
+
 
         private void Start()
         {
@@ -115,6 +120,8 @@ namespace TotallyNotEvil.Dialogue
             }
         }
 
+
+
         // Display Option - Type Writer Style
         private IEnumerator TypeWriter(float delay)
         {
@@ -137,7 +144,6 @@ namespace TotallyNotEvil.Dialogue
                     dialStage++;
                     typeWriterCount = 0;
                     hasReadLine = true;
-                    StartCoroutine(WaitToHide());
                 }
                 else
                 {
@@ -158,12 +164,19 @@ namespace TotallyNotEvil.Dialogue
             isCoR = false;
         }
 
+
+
         private IEnumerator WaitToHide()
         {
-            yield return new WaitForSeconds(2f);
+            if (file.durationToShow != null && file.durationToShow[dialStage] > 0)
+                yield return new WaitForSeconds(file.durationToShow[dialStage]);
+            else
+                yield return new WaitForSeconds(2f);
+
             dialName.text = "";
             dialText.text = "";
         }
+
 
 
         public void Input()
@@ -178,6 +191,48 @@ namespace TotallyNotEvil.Dialogue
             if (inputPressed) { inputPressed = false; }
             if (fileHasEnded) { fileHasEnded = false; }
             dialStage = 0;
+        }
+
+
+        public void AutoDial()
+        {
+            _lineCount = 0;
+            _placeInLine = 0;
+            StartCoroutine(ShowDialAuto());
+        }
+
+
+
+        private IEnumerator ShowDialAuto()
+        {
+            if (file.dialogue.Count > _lineCount)
+            {
+                if (file.dialogue[_lineCount] == _sentence)
+                {
+                    _lineCount++;
+                    _sentence = "";
+                    _placeInLine = 0;
+                    yield return new WaitForSeconds(file.durationToShow[_lineCount - 1]);
+                    StartCoroutine(ShowDialAuto());
+                }
+                else
+                {
+                    _sentence = file.dialogue[_lineCount].Substring(0, _placeInLine);
+                    dialName.text = file.names[_lineCount];
+                    dialText.text = _sentence;
+                    _placeInLine++;
+                    yield return new WaitForSeconds(.025f);
+                    StartCoroutine(ShowDialAuto());
+                }
+            }
+            else
+            {
+                yield return new WaitForSeconds(file.timeUntilHide);
+                dialName.text = "";
+                dialText.text = "";
+            }
+
+            yield break;
         }
     }
 }
