@@ -22,6 +22,12 @@ namespace TotallyNotEvil
         private bool isCoR;
 
 
+        // Animation
+        private Animator anim;
+        private Rigidbody2D rb;
+        private SpriteRenderer sr;
+
+
         private void OnDisable()
         {
             StopAllCoroutines();
@@ -37,6 +43,9 @@ namespace TotallyNotEvil
             CanTakeDamage = false;
             wait = new WaitForSeconds(.5f);
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            anim = GetComponent<Animator>();
+            rb = GetComponent<Rigidbody2D>();
+            sr = GetComponent<SpriteRenderer>();
         }
 
 
@@ -55,6 +64,54 @@ namespace TotallyNotEvil
             if (Health <= 0)
             {
                 gameObject.SetActive(false);
+            }
+
+            Debug.Log(rb.velocity.normalized.x);
+
+            if (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)
+            {
+                anim.SetBool("IsMoving", true);
+            }
+            else
+                anim.SetBool("IsMoving", false);
+
+
+            if (rb.velocity.normalized.y < .01f && rb.velocity.normalized.y > -.01f)
+            {
+                anim.SetBool("IsFlying", false);
+            }
+
+
+            // flying
+            if (anim.GetBool("IsFlying"))
+            {
+                if (rb.velocity.normalized.y > .25f)
+                {
+                    // up
+                    anim.SetInteger("FlyDirection", 1);
+                }
+                else if (rb.velocity.normalized.y < .25f && rb.velocity.normalized.y > -.25f)
+                {
+                    // stright (ish)
+                    anim.SetInteger("FlyDirection", 0);
+                }
+                else if (rb.velocity.normalized.y < -.25f)
+                {
+                    // down
+                    anim.SetInteger("FlyDirection", -1);
+                }
+
+                if (rb.velocity.normalized.x > .5f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
+            }
+            else if (!anim.GetBool("IsAiming") && !anim.GetBool("IsFlying"))
+            {
+                if (rb.velocity.normalized.x > .5f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
             }
         }
 

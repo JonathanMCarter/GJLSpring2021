@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 471676978240876411}
   - component: {fileID: 8217756565506260223}
   - component: {fileID: -2118665372633502660}
+  - component: {fileID: 406269293}
   m_Layer: 0
-  m_Name: Orb
+  m_Name: Spectre
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 471676978240876412}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.44, y: 5.26, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children:
   - {fileID: 6203815451580570976}
   - {fileID: 8115417144451958673}
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 51c4255197126044f9ce21b75cd3f6a0, type: 3}
   m_Color: {r: 0.20754717, g: 0.64405257, b: 0.8301887, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -156,27 +157,34 @@ MonoBehaviour:
   m_UseRendererSilhouette: 1
   m_CastsShadows: 1
   m_SelfShadows: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 
   m_ShapePath:
-  - {x: -0.36021787, y: -0.3454367, z: 0}
-  - {x: -0.22685543, y: -0.4479058, z: 0}
-  - {x: -0.049474854, y: -0.49225104, z: 0}
-  - {x: 0.17225094, y: -0.46268713, z: 0}
-  - {x: 0.32572764, y: -0.37007263, z: 0}
-  - {x: 0.43832228, y: -0.22617972, z: 0}
-  - {x: 0.48266748, y: -0.04879883, z: 0}
-  - {x: 0.4580312, y: 0.15814532, z: 0}
-  - {x: 0.36934078, y: 0.34538084, z: 0}
-  - {x: 0.19688721, y: 0.44885322, z: 0}
-  - {x: 0.014579318, y: 0.49812514, z: 0}
-  - {x: -0.20148736, y: 0.45383587, z: 0}
-  - {x: -0.3700725, y: 0.34050947, z: 0}
-  - {x: -0.4682908, y: 0.15814532, z: 0}
-  - {x: -0.5126357, y: -0.014308244, z: 0}
-  - {x: -0.46336347, y: -0.1916885, z: 0}
-  m_ShapePathHash: -1736823284
+  - {x: -0.384, y: -0.384, z: 0}
+  - {x: 0.384, y: -0.384, z: 0}
+  - {x: 0.384, y: 0.384, z: 0}
+  - {x: -0.384, y: 0.384, z: 0}
+  m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -157440
+  m_InstanceId: 75308
+--- !u!95 &406269293
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471676978240876412}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7dde78f1b87255843a92bdc650cb7d73, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &587859694465102030
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,22 +223,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587859694465102030}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LightType: 3
+  m_LightType: 2
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.7
-  m_Color: {r: 0.15686275, g: 0.22352943, b: 0.25882354, a: 1}
-  m_Intensity: 0.6
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
   m_LightVolumeOpacity: 0.379
   m_ApplyToSortingLayers: 00000000
-  m_LightCookieSprite: {fileID: 0}
-  m_UseNormalMap: 0
+  m_LightCookieSprite: {fileID: 21300000, guid: 51c4255197126044f9ce21b75cd3f6a0, type: 3}
+  m_UseNormalMap: 1
   m_LightOrder: 0
-  m_AlphaBlendOnOverlap: 0
+  m_AlphaBlendOnOverlap: 1
   m_ShadowIntensity: 0
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
