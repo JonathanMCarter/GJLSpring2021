@@ -30,11 +30,18 @@ namespace TotallyNotEvil
         [Header("AI Stuff")]
         [SerializeField] private Vector2[] range;
         [SerializeField] private Vector2 posToMoveTo;
+        [SerializeField] private float moveSpeedAI = 5f;
+        [SerializeField] private float arrivalTolerance = 0.5f; //acceptable distance to destination to have arrived
+        [SerializeField] private float minTravelDistance = 1f; //radius within which the AI does not choose positions from
         [SerializeField] private bool canMove;
+        [SerializeField] private bool inMotion;
+
+
 
         private void Start()
         {
             canMove = true;
+            inMotion = false;
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -43,12 +50,35 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (!IsPossessed && canMove)
+            if (!IsPossessed && canMove) 
             {
                 // AI movement
-                posToMoveTo = new Vector2(Random.Range(range[0].x, range[1].x), transform.position.y);
-                StartCoroutine(ChooseMovePos());
-                MoveAction(posToMoveTo);
+
+                // define movement goal
+                if (!inMotion) 
+                {
+                    if(IsGrounded())
+                    { //being grounded allows us to set the correct y position for posToMoveTo
+
+                        //old way:
+                        //posToMoveTo = new Vector2(Random.Range(range[0].x, range[1].x), transform.position.y);
+
+                        //new way:
+                        posToMoveTo = new Vector2(RandomXNotTooClose(), transform.position.y);
+
+                        //Debug.Log(Vector2.Distance(transform.position, posToMoveTo)); //should show that the distance of the move is greater than void-radius
+
+                        StartCoroutine(ChooseMovePos());
+                    }
+                }
+                else // if inMotion, pursue movement goal
+                {
+                    MoveAction(posToMoveTo);
+                }
+                // TODO allow AI to arrive at a given location
+                if (Vector2.Distance(transform.position, posToMoveTo) < arrivalTolerance) {
+                    inMotion = false;
+                }
             }
         }
 
@@ -58,7 +88,7 @@ namespace TotallyNotEvil
             if (IsPossessed)
                 rb.velocity = new Vector2(dir.x * MoveSpeed, rb.velocity.y);
             else
-                rb.position = Vector2.Lerp(transform.position, posToMoveTo, 5 * Time.deltaTime);
+                rb.position = Vector2.Lerp(transform.position, posToMoveTo, moveSpeedAI * Time.smoothDeltaTime);
         }
 
 
@@ -77,7 +107,7 @@ namespace TotallyNotEvil
 
             if (_hit.collider != null)
             {
-                Debug.Log(_hit.collider.gameObject.name);
+                //Debug.Log(_hit.collider.gameObject.name);
                 return true;
             }
             else
@@ -103,9 +133,35 @@ namespace TotallyNotEvil
 
         private IEnumerator ChooseMovePos()
         {
-            canMove = true;
-            yield return new WaitForSeconds(Random.Range(2, 7));
             canMove = false;
+            yield return new WaitForSeconds(Random.Range(2, 4));
+            canMove = true;
+            inMotion = true;
+        }
+
+        private float RandomXNotTooClose() {
+            // suppose we want to make sure our new random position is not too close to our initial position:
+            // start the random count at the initial position + min travel distance - intial lower bound 
+            // the lower value is subtracted for the modulo in the next step to work correct. 
+            // upper bound at the (new) lowerBound + initial range - 2 * min travel distance
+            // apply a modulo of the overall range
+            // add back the initial lower bound
+
+            float initialX = transform.position.x;
+            float overallRange = range[1].x - range[0].x;
+            // throw error if 2 * void radius is bigger than the overall range
+            if (overallRange < 2 * minTravelDistance) {
+                Debug.LogError("the overall range for the AI must be greater than twice the void radius. gameObject-name: " + gameObject.name);
+            }
+            // throw error if range[0].x is not smaller than range[1].x;
+            if (range[0].x >= range[1].x) {
+                Debug.LogError("lower value of range (index 0) must be strictly smaller than upper value (index 1) for AI. gameObject-name: " + gameObject.name);
+            }
+
+            float lowerBound = (initialX + minTravelDistance) - range[0].x;
+            float upperBound = (lowerBound + overallRange) - 2 * minTravelDistance;
+            float wrappedValue = Random.Range(lowerBound, upperBound) % overallRange;
+            return wrappedValue + range[0].x;
         }
     }
 }

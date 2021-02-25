@@ -77,6 +77,8 @@ namespace TotallyNotEvil
 
         private void Start()
         {
+            //Application.targetFrameRate = 20;
+
             // Sets up the orb
             orb = Instantiate(orbPrefab);
             orb.SetActive(false);
