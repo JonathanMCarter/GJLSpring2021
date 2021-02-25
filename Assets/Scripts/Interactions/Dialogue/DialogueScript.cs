@@ -196,6 +196,7 @@ namespace TotallyNotEvil.Dialogue
 
         public void AutoDial()
         {
+            StopAllCoroutines();
             _lineCount = 0;
             _placeInLine = 0;
             StartCoroutine(ShowDialAuto());
