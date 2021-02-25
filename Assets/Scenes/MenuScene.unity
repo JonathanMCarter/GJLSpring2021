@@ -583,6 +583,7 @@ MonoBehaviour:
   _moveSpeed: 4
   _jumpHeight: 0.45
   _possessed: 0
+  possessedIdleSprite: {fileID: 0}
   mask:
     serializedVersion: 2
     m_Bits: 128

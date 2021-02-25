@@ -21,6 +21,14 @@ namespace TotallyNotEvil
         public bool IsPossessed { get { return _possessed; } set { _possessed = value; } }
         public GameObject GetGameObject { get; set; }
 
+        // Possession Sprite
+        [SerializeField] private Sprite possessedIdleSprite;
+        private Sprite defaultSprite;
+        private SpriteRenderer sr;
+
+        // Anim stuff
+        private Animator anim;
+
 
         private Rigidbody2D rb;
         private PlayerController player;
@@ -45,6 +53,13 @@ namespace TotallyNotEvil
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            sr = GetComponent<SpriteRenderer>();
+
+            // set the default sprite
+            defaultSprite = GetComponent<SpriteRenderer>().sprite;
+
+            // anim
+            anim = GetComponent<Animator>();
         }
 
 
@@ -80,6 +95,17 @@ namespace TotallyNotEvil
                     inMotion = false;
                 }
             }
+            else
+            {
+                // edits sprite to possessed sprite.
+                if (IsPossessed && !sr.sprite.Equals(defaultSprite))
+                    sr.sprite = possessedIdleSprite;
+                else if (!IsPossessed && sr.sprite.Equals(defaultSprite))
+                    sr.sprite = defaultSprite;
+            }
+
+            // runs the anims
+            PeopleAnim();
         }
 
 
@@ -162,6 +188,35 @@ namespace TotallyNotEvil
             float upperBound = (lowerBound + overallRange) - 2 * minTravelDistance;
             float wrappedValue = Random.Range(lowerBound, upperBound) % overallRange;
             return wrappedValue + range[0].x;
+        }
+
+
+
+        /// <summary>
+        /// Handles all the anim for the people
+        /// </summary>
+        private void PeopleAnim()
+        {
+            // is possessed?
+            if (IsPossessed && !anim.GetBool("IsPossessed"))
+                anim.SetBool("IsPossessed", true);
+            else if (!IsPossessed && anim.GetBool("IsPossessed"))
+                anim.SetBool("IsPossessed", false);
+
+
+            // is walking?
+            if (IsPossessed && (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f))
+            {
+                anim.SetBool("IsWalking", true);
+
+                if (rb.velocity.normalized.x < -.05f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
+            }
+            else if (anim.GetBool("IsWalking"))
+                anim.SetBool("IsWalking", false);
+                
         }
     }
 }

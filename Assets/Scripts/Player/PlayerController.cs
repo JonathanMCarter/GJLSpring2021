@@ -137,7 +137,8 @@ namespace TotallyNotEvil
                     IncreasePower();
                     AimingLine(orb);
 
-                    am.GetComponent<Animator>().SetBool("IsAiming", true);
+                    if (am)
+                        am.GetComponent<Animator>().SetBool("IsAiming", true);
                 }
 
                 arrow.transform.position = new Vector3(orb.transform.position.x, orb.transform.position.y + 1f, 0f);
