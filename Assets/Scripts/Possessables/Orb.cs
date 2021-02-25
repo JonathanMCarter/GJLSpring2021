@@ -66,53 +66,7 @@ namespace TotallyNotEvil
                 gameObject.SetActive(false);
             }
 
-            Debug.Log(rb.velocity.normalized.x);
-
-            if (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)
-            {
-                anim.SetBool("IsMoving", true);
-            }
-            else
-                anim.SetBool("IsMoving", false);
-
-
-            if (rb.velocity.normalized.y < .01f && rb.velocity.normalized.y > -.01f)
-            {
-                anim.SetBool("IsFlying", false);
-            }
-
-
-            // flying
-            if (anim.GetBool("IsFlying"))
-            {
-                if (rb.velocity.normalized.y > .25f)
-                {
-                    // up
-                    anim.SetInteger("FlyDirection", 1);
-                }
-                else if (rb.velocity.normalized.y < .25f && rb.velocity.normalized.y > -.25f)
-                {
-                    // stright (ish)
-                    anim.SetInteger("FlyDirection", 0);
-                }
-                else if (rb.velocity.normalized.y < -.25f)
-                {
-                    // down
-                    anim.SetInteger("FlyDirection", -1);
-                }
-
-                if (rb.velocity.normalized.x > .5f)
-                    sr.flipX = true;
-                else
-                    sr.flipX = false;
-            }
-            else if (!anim.GetBool("IsAiming") && !anim.GetBool("IsFlying"))
-            {
-                if (rb.velocity.normalized.x > .5f)
-                    sr.flipX = true;
-                else
-                    sr.flipX = false;
-            }
+            SpectreAnim();
         }
 
 
@@ -193,6 +147,62 @@ namespace TotallyNotEvil
             yield return new WaitForSeconds(delay);
             TakeDamage(1);
             isCoR = false;
+        }
+
+
+        /// <summary>
+        /// Handles almsot all the spectre anims, aiming stuff is on the player controller
+        /// </summary>
+        private void SpectreAnim()
+        {
+            // Moving
+
+            if (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)
+            {
+                anim.SetBool("IsMoving", true);
+
+                if (rb.velocity.normalized.x < -.05f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
+            }
+            else
+                anim.SetBool("IsMoving", false);
+
+
+            // aiming sprite flip
+            if (player.isAiming)
+            {
+                if (player.lr.GetPosition(1).x < transform.localPosition.x)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
+            }
+
+
+            // Flying
+            if (rb.velocity.normalized.y == 0f)
+            {
+                anim.SetBool("IsFlying", false);
+            }
+
+
+            // Flying Direction
+            if (rb.velocity.normalized.y > .25f)
+            {
+                // up
+                anim.SetInteger("FlyDirection", 1);
+            }
+            else if (rb.velocity.normalized.y < .25f && rb.velocity.normalized.y > -.25f)
+            {
+                // stright (ish)
+                anim.SetInteger("FlyDirection", 0);
+            }
+            else if (rb.velocity.normalized.y < -.25f)
+            {
+                // down
+                anim.SetInteger("FlyDirection", -1);
+            }
         }
     }
 }

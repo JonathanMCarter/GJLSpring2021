@@ -36,7 +36,7 @@ namespace TotallyNotEvil
         private Actions actions;
         private InputDevice device;
         private Camera cam;
-        private LineRenderer lr;
+        internal LineRenderer lr;
 
         private IMoveable moveAM;
         internal IInteractable interaction;
@@ -45,7 +45,7 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
 
         // is the user aiming
-        private bool isAiming;
+        internal bool isAiming;
 
 
         private void OnDisable()
