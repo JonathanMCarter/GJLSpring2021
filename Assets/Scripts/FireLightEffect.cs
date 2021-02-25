@@ -33,7 +33,7 @@ namespace TotallyNotEvil.LightEffects
         {
             isCoR = true;
             fireLight.intensity = Random.Range(flickerMinMax[0], flickerMinMax[1]);
-            yield return new WaitForSeconds(Random.Range(.05f, .5f));
+            yield return new WaitForSeconds(Random.Range(.05f, .3f));
             isCoR = false;
             StartCoroutine(FlickerCO());
         }
