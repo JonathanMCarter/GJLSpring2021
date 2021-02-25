@@ -36,7 +36,7 @@ namespace TotallyNotEvil
         private Actions actions;
         private InputDevice device;
         private Camera cam;
-        private LineRenderer lr;
+        internal LineRenderer lr;
 
         private IMoveable moveAM;
         internal IInteractable interaction;
@@ -45,7 +45,7 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
 
         // is the user aiming
-        private bool isAiming;
+        internal bool isAiming;
 
 
         private void OnDisable()
@@ -136,6 +136,9 @@ namespace TotallyNotEvil
                 {
                     IncreasePower();
                     AimingLine(orb);
+
+                    if (am)
+                        am.GetComponent<Animator>().SetBool("IsAiming", true);
                 }
 
                 arrow.transform.position = new Vector3(orb.transform.position.x, orb.transform.position.y + 1f, 0f);
@@ -205,14 +208,18 @@ namespace TotallyNotEvil
 
                 // direction to shoot
                 ShootOrbInDirection(am);
-                
+
                 orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
                 rb.velocity = Vector2.zero;
                 am = null;
                 vCam.SetTargetAndFollow(orb.transform);
             }
             else
+            {
                 ShootOrbInDirection(orb);
+                am.GetComponent<Animator>().SetBool("IsAiming", false);
+                am.GetComponent<Animator>().SetBool("IsFlying", true);
+            }
 
 
             // stop "aiming" & reset the power value

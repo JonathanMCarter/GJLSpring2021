@@ -22,12 +22,16 @@ namespace TotallyNotEvil
         [SerializeField] private UnityEngine.Events.UnityEvent e;
         [SerializeField] private bool possessionEventRan = false;
         private Rigidbody2D rb;
+        private SpriteRenderer sr;
+        private Animator anim;
 
 
         void Start()
         {
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
+            anim = GetComponent<Animator>();
+            sr = GetComponent<SpriteRenderer>();
         }
 
         private void Update()
@@ -36,6 +40,10 @@ namespace TotallyNotEvil
             {
                 e.Invoke();
                 possessionEventRan = true;
+            }
+            else if (IsPossessed)
+            {
+                RatAnim();
             }
         }
 
@@ -50,6 +58,27 @@ namespace TotallyNotEvil
         public void JumpAction()
         {
             // Rats can't jump, just for the sake of less work xD.
+        }
+
+
+        /// <summary>
+        /// Rat animation fucntionaility
+        /// </summary>
+        private void RatAnim()
+        {
+            // Is Moving?
+            if (rb.velocity.normalized.x > .05f || rb.velocity.normalized.x < -.05f)
+            {
+                anim.SetBool("IsMoving", true);
+
+                // Flipping sprites
+                if (rb.velocity.normalized.x < -.01f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
+            }
+            else
+                anim.SetBool("IsMoving", false);
         }
     }
 }
