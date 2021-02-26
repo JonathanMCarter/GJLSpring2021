@@ -20,7 +20,7 @@ namespace TotallyNotEvil
         public int Health { get; set; }
 
         private bool isCoR;
-
+        private bool hasCalledDeath;
 
         // Animation
         private Animator anim;
@@ -51,7 +51,7 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            Debug.Log(CanTakeDamage + " : " + Health);
+            //Debug.Log(CanTakeDamage + " : " + Health);
 
             if (!player.inBody && !isCoR)
             {
@@ -60,10 +60,12 @@ namespace TotallyNotEvil
             }
 
 
-            // if dead - die (will show a death ui eventually)
-            if (Health <= 0)
+            // if dead - die
+            if (Health <= 0 && !hasCalledDeath)
             {
-                gameObject.SetActive(false);
+                string[] _deathMessages = new string[] { "Faded Away...", "AFK", "Froze in horror" };
+                Death.PlayerHasDeath(_deathMessages[Random.Range(0, _deathMessages.Length - 1)]);
+                hasCalledDeath = true;
             }
 
             SpectreAnim();
