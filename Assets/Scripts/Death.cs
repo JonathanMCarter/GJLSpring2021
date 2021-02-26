@@ -15,7 +15,7 @@ namespace TotallyNotEvil
             Text _causeTxt = _go.GetComponentsInChildren<Text>()[1];
 
             // actions
-            _anim.SetTrigger("HasDied");
+            _anim.SetTrigger("IsDead");
             _causeTxt.text = causeOfDeath;
         }
     }
