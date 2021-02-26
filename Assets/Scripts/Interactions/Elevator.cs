@@ -14,13 +14,11 @@ namespace TotallyNotEvil.Interactions
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            trans = GetComponent<LevelTransition>();
         }
 
 
         public void Interact()
         {
-            Debug.Log("kfjdfj");
             anim.SetBool("LevelComplete", true);
             player.enabled = false;
             trans.Transition();
