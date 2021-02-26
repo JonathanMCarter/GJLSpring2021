@@ -16,6 +16,8 @@ namespace TotallyNotEvil
         [SerializeField] private GameObject toTeleport;
         [SerializeField] private bool isCoR;
 
+        [SerializeField] private bool hasKey;
+
         private Actions actions;
 
 
@@ -35,7 +37,7 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (isInLift && inputPressed && !isCoR && toTeleport)
+            if (isInLift && inputPressed && !isCoR && toTeleport && hasKey)
             {
                 StartCoroutine(TeleportCo());
             }
