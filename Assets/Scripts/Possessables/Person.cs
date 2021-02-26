@@ -33,7 +33,8 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
         private PlayerController player;
 
-        [SerializeField] private LayerMask mask;
+        [SerializeField] private LayerMask worldMask;
+        [SerializeField] private LayerMask possessableMask;
 
         [Header("AI Stuff")]
         [SerializeField] private Vector2[] range;
@@ -44,7 +45,7 @@ namespace TotallyNotEvil
         [SerializeField] private bool canMove;
         [SerializeField] private bool inMotion;
 
-
+        private Vector2 personShape;
 
         private void Start()
         {
@@ -60,6 +61,14 @@ namespace TotallyNotEvil
 
             // anim
             anim = GetComponent<Animator>();
+
+            //set person shape (for IsGrounded)
+            BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+            // boxCollider.size gives values half as big as we might naively expect
+            // doubling the y value gives our ordinary height
+            // keeping the x value half of the width makes sure our boxCast (later in the code) doesn't 
+            // get triggered by accidental side-contact overlap between persons - avoiding unexpected rocket boots
+            personShape = new Vector2(boxCollider.size.x, boxCollider.size.y*2);
         }
 
 
@@ -98,9 +107,9 @@ namespace TotallyNotEvil
             else
             {
                 // edits sprite to possessed sprite.
-                if (IsPossessed && !sr.sprite.Equals(defaultSprite))
+                if (IsPossessed && sr.sprite.Equals(defaultSprite))
                     sr.sprite = possessedIdleSprite;
-                else if (!IsPossessed && sr.sprite.Equals(defaultSprite))
+                else if (!IsPossessed && !sr.sprite.Equals(defaultSprite))
                     sr.sprite = defaultSprite;
             }
 
@@ -120,6 +129,7 @@ namespace TotallyNotEvil
 
         public void JumpAction()
         {
+            Debug.Log("IsGrounded: " + IsGrounded().ToString());
             if (IsGrounded())
             {
                 rb.AddForce(Vector2.up * JumpHeight, ForceMode2D.Impulse);
@@ -129,17 +139,23 @@ namespace TotallyNotEvil
 
         private bool IsGrounded()
         {
-            RaycastHit2D _hit = Physics2D.BoxCast(transform.position, Vector2.one * 1.5f, 0f, Vector2.down, .05f, mask);
+            Debug.Log(personShape);
+            RaycastHit2D[] _hits = Physics2D.BoxCastAll(transform.position, personShape, 0f, Vector2.down, .05f, worldMask | possessableMask);
 
-            if (_hit.collider != null)
-            {
-                //Debug.Log(_hit.collider.gameObject.name);
-                return true;
+            if (_hits != null && _hits.Length != 0) {
+                for (int i = 0; i < _hits.Length; i++) {
+                    if (_hits[i].collider.gameObject != gameObject)
+                    {
+                        return true;
+                    }
+                }
             }
-            else
-            {
-                return false;
-            }
+
+
+            //else
+            //{
+            return false;
+            //}
         }
 
 
@@ -166,27 +182,27 @@ namespace TotallyNotEvil
         }
 
         private float RandomXNotTooClose() {
-            // suppose we want to make sure our new random position is not too close to our initial position:
-            // start the random count at the initial position + min travel distance - intial lower bound 
-            // the lower value is subtracted for the modulo in the next step to work correct. 
-            // upper bound at the (new) lowerBound + initial range - 2 * min travel distance
-            // apply a modulo of the overall range
-            // add back the initial lower bound
+            // we want to make sure our new random position is not too close to our initial position
 
             float initialX = transform.position.x;
             float overallRange = range[1].x - range[0].x;
-            // throw error if 2 * void radius is bigger than the overall range
+            // throw error if 2 * minimum travel is bigger than the overall range
             if (overallRange < 2 * minTravelDistance) {
-                Debug.LogError("the overall range for the AI must be greater than twice the void radius. gameObject-name: " + gameObject.name);
+                Debug.LogError("the overall range for the AI must be greater than double the minimum travel distance. gameObject-name: " + gameObject.name);
             }
             // throw error if range[0].x is not smaller than range[1].x;
             if (range[0].x >= range[1].x) {
                 Debug.LogError("lower value of range (index 0) must be strictly smaller than upper value (index 1) for AI. gameObject-name: " + gameObject.name);
             }
 
+            // start the random count at the initial position + min travel distance - intial lower bound 
+            // the lower value is subtracted for the modulo in the next step to work correct. 
             float lowerBound = (initialX + minTravelDistance) - range[0].x;
+            // upper bound at the (new) lowerBound + initial range - 2 * min travel distance
             float upperBound = (lowerBound + overallRange) - 2 * minTravelDistance;
+            // apply a modulo of the overall range to a number generated between the new upper and lower bounds
             float wrappedValue = Random.Range(lowerBound, upperBound) % overallRange;
+            // finally, add back the initial lower bound
             return wrappedValue + range[0].x;
         }
 
@@ -205,7 +221,7 @@ namespace TotallyNotEvil
 
 
             // is walking?
-            if (IsPossessed && (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f))
+            if ((IsPossessed && (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)) || (!IsPossessed && inMotion))
             {
                 anim.SetBool("IsWalking", true);
 
