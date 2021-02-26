@@ -16,7 +16,7 @@ namespace TotallyNotEvil
         [SerializeField] private GameObject toTeleport;
         [SerializeField] private bool isCoR;
 
-        [SerializeField] private bool hasKey;
+        public bool hasKey;
 
         private Actions actions;
 
@@ -79,6 +79,12 @@ namespace TotallyNotEvil
             toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
             isCoR = false;
+        }
+
+
+        public void HasGotKey()
+        {
+            hasKey = true;
         }
     }
 }

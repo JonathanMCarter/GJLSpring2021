@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/MenuScene.unity
     guid: 2ecd3d31572b5d34a9d5485b712f54b4
   - enabled: 1
-    path: Assets/Scenes/ElevatorScene.unity
-    guid: 10078b7ba8be4a34f9eb9f8f4af3e5b1
-  - enabled: 1
     path: Assets/Scenes/BasementScene.unity
     guid: 98c78af0509a17d4eb5b20055fcefd65
+  - enabled: 1
+    path: Assets/Scenes/End.unity
+    guid: 0542c10b74a3d1542854817b357fbd08
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 97e852fed808b194dad581b868160c73, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 698b0bb1d2c0b3b4087ac12c5b156492, type: 2}
