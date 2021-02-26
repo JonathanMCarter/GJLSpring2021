@@ -231,6 +231,7 @@ namespace TotallyNotEvil.Dialogue
                 yield return new WaitForSeconds(file.timeUntilHide);
                 dialName.text = "";
                 dialText.text = "";
+                fileHasEnded = true;
             }
 
             yield break;
