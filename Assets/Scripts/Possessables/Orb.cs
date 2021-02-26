@@ -51,7 +51,7 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            //Debug.Log(CanTakeDamage + " : " + Health);
+            Debug.Log(CanTakeDamage + " : " + Health);
 
             if (!player.inBody && !isCoR)
             {

@@ -118,7 +118,7 @@ namespace TotallyNotEvil
                     else
                     {
                         moveAM.MoveAction(actions.Movement.Move.ReadValue<Vector2>());
-                        //Debug.Log(actions.Movement.Jump.phase.ToString());
+
                         if (actions.Movement.Jump.phase == InputActionPhase.Performed)
                         {
                             moveAM.JumpAction();
@@ -211,8 +211,7 @@ namespace TotallyNotEvil
 
                 orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
                 rb.velocity = Vector2.zero;
-                //am = null;
-                am = orb;
+                am = null;
                 vCam.SetTargetAndFollow(orb.transform);
             }
             else
