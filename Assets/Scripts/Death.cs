@@ -7,7 +7,7 @@ namespace TotallyNotEvil
 {
     public static class Death
     {
-        public static void PlayerHasDeath(string causeOfDeath)
+        public static void PlayerHasDeath(string causeOfDeath = "")
         {
             // refs
             GameObject _go = GameObject.FindGameObjectWithTag("DeathUI");
