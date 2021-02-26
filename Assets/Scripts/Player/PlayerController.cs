@@ -304,6 +304,33 @@ namespace TotallyNotEvil
             else
                 orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
         }
+        
+
+
+        public void DePossess()
+        {
+            Collider2D _orbCollider = orb.GetComponent<Collider2D>();
+            Collider2D _amCollider = am.GetComponent<Collider2D>();
+
+            // ignore collision with current possession so to not hit the object on exit. (Sadly doesn't work for triggers...)
+            Physics2D.IgnoreCollision(_orbCollider, _amCollider);
+
+            // yeet the player (orb) around
+            orb.SetActive(true);
+            orb.transform.position = am.transform.position;
+
+            // the player is no longer in a body
+            inBody = false;
+
+            orb.GetComponent<Orb>().Yeet(am.GetComponent<IPossessable>());
+            rb.velocity = Vector2.zero;
+            //am = null;
+            am = orb;
+            vCam.SetTargetAndFollow(orb.transform);
+
+            am.GetComponent<Animator>().SetBool("IsAiming", false);
+            am.GetComponent<Animator>().SetBool("IsFlying", true);
+        }
 
 
         /// <summary>

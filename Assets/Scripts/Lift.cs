@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 namespace TotallyNotEvil
 {
@@ -11,13 +13,23 @@ namespace TotallyNotEvil
         [SerializeField] private GameObject toGoTo;
         [SerializeField] private Animator liftUI;
 
-        private GameObject toTeleport;
-        private bool isCoR;
+        [SerializeField] private GameObject toTeleport;
+        [SerializeField] private bool isCoR;
 
+        private Actions actions;
+
+
+        private void OnEnable()
+        {
+            actions = new Actions();
+            actions.Movement.Interact.performed += Interact;
+            actions.Enable();
+        }
 
         private void OnDisable()
         {
             StopAllCoroutines();
+            actions.Disable();
         }
 
 
@@ -30,11 +42,38 @@ namespace TotallyNotEvil
         }
 
 
+        private void Interact(InputAction.CallbackContext ctx)
+        {
+            inputPressed = !inputPressed;
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.GetComponent<IPossessable>() != null)
+            {
+                isInLift = true;
+                toTeleport = collision.gameObject;
+            }
+        }
+
+
+
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (isInLift)
+            {
+                isInLift = false;
+                toTeleport = null;
+            }
+        }
+
+
         private IEnumerator TeleportCo()
         {
             isCoR = true;
-            liftUI.SetBool("IsMoving", true);
-            yield return new WaitForSeconds(1f);
+            liftUI.SetBool("LevelComplete", true);
+            yield return new WaitForSeconds(2f);
             toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
             isCoR = false;

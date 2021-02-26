@@ -6,22 +6,27 @@ namespace TotallyNotEvil
 {
     public class Gnome : MonoBehaviour
     {
-        [SerializeField] private Sprite[] gnomeSprites;
+        [SerializeField] private Sprite[] gnomeSprite;
 
-        private SpriteRenderer sr;
+        [SerializeField] private SpriteRenderer sr;
         private Animator anim;
 
-        private GameObject toMurder;
-        private bool shouldMurder;
-        private float murderTimer;
-        private float murderTimeLimit;
+        [SerializeField] private GameObject toMurder;
+        [SerializeField] private bool shouldMurder;
+        [SerializeField] private float murderTimer;
+        [SerializeField] private float murderTimeLimit;
+
+        private bool isCoR;
+        private PlayerController player;
 
 
         // Start is called before the first frame update
         void Start()
         {
+            player = FindObjectOfType<PlayerController>();
             sr = GetComponent<SpriteRenderer>();
             anim = GetComponent<Animator>();
+            anim.enabled = false;
         }
 
 
@@ -30,14 +35,31 @@ namespace TotallyNotEvil
         {
             if (shouldMurder)
             {
+                sr.sprite = gnomeSprite[1];
+
                 murderTimer += Time.deltaTime;
 
                 if (murderTimer > murderTimeLimit)
                 {
-                    if (anim.GetBool("Murder"))
+                    anim.enabled = true;
+
+                    if (!anim.GetBool("Murder"))
+                    {
                         anim.SetBool("Murder", true);
 
+                        if (!isCoR)
+                            StartCoroutine(Kill());
+                    }
+                }
+            }
+            else
+            {
+                sr.sprite = gnomeSprite[0];
 
+                if (anim.GetBool("Murder"))
+                {
+                    anim.SetBool("Murder", false);
+                    anim.enabled = false;
                 }
             }
         }
@@ -50,7 +72,6 @@ namespace TotallyNotEvil
                 if (collision.GetComponent<Person>())
                 {
                     shouldMurder = true;
-                    sr.sprite = gnomeSprites[1];
                     toMurder = collision.gameObject;
                 }
             }
@@ -61,11 +82,21 @@ namespace TotallyNotEvil
         {
             if (shouldMurder)
             {
+                StopAllCoroutines();
                 shouldMurder = false;
                 murderTimer = 0;
                 toMurder = null;
-                sr.sprite = gnomeSprites[0];
             }
+        }
+
+
+        private IEnumerator Kill()
+        {
+            isCoR = true;
+            yield return new WaitForSeconds(1f);
+            player.DePossess();
+            toMurder.SetActive(false);
+            isCoR = false;
         }
     }
 }
