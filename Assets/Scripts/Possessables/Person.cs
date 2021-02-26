@@ -33,8 +33,7 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
         private PlayerController player;
 
-        [SerializeField] private LayerMask worldMask;
-        [SerializeField] private LayerMask possessableMask;
+        [SerializeField] private LayerMask masks;
 
         [Header("AI Stuff")]
         [SerializeField] private Vector2[] range;
@@ -140,7 +139,7 @@ namespace TotallyNotEvil
         private bool IsGrounded()
         {
             Debug.Log(personShape);
-            RaycastHit2D[] _hits = Physics2D.BoxCastAll(transform.position, personShape, 0f, Vector2.down, .05f, worldMask | possessableMask);
+            RaycastHit2D[] _hits = Physics2D.BoxCastAll(transform.position, personShape, 0f, Vector2.down, .05f, masks);
 
             if (_hits != null && _hits.Length != 0) {
                 for (int i = 0; i < _hits.Length; i++) {

@@ -11,7 +11,7 @@ namespace TotallyNotEvil
         private SpriteRenderer sr;
         private Animator anim;
 
-        private SpriteRenderer toMurderSR;
+        private GameObject toMurder;
         private bool shouldMurder;
         private float murderTimer;
         private float murderTimeLimit;
@@ -37,8 +37,7 @@ namespace TotallyNotEvil
                     if (anim.GetBool("Murder"))
                         anim.SetBool("Murder", true);
 
-                    if (toMurderSR && toMurderSR.color.a > 0)
-                        toMurderSR.color = new Color32(255, 255, 255, (byte)(-1 * Time.deltaTime));
+
                 }
             }
         }
@@ -51,8 +50,8 @@ namespace TotallyNotEvil
                 if (collision.GetComponent<Person>())
                 {
                     shouldMurder = true;
-                    toMurderSR = collision.GetComponent<SpriteRenderer>();
                     sr.sprite = gnomeSprites[1];
+                    toMurder = collision.gameObject;
                 }
             }
         }
@@ -64,7 +63,7 @@ namespace TotallyNotEvil
             {
                 shouldMurder = false;
                 murderTimer = 0;
-                toMurderSR = null;
+                toMurder = null;
                 sr.sprite = gnomeSprites[0];
             }
         }
