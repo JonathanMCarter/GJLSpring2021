@@ -8,6 +8,7 @@ TagManager:
   - NoteUI
   - Dialogue
   - DeathUI
+  - Rat
   layers:
   - Default
   - TransparentFX

@@ -33,9 +33,10 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
         private PlayerController player;
 
-        [SerializeField] private LayerMask masks;
+        private LayerMask masks;
 
         [Header("AI Stuff")]
+        [SerializeField] private bool canWander = true;
         [SerializeField] private Vector2[] range;
         [SerializeField] private Vector2 posToMoveTo;
         [SerializeField] private float moveSpeedAI = 5f;
@@ -44,12 +45,15 @@ namespace TotallyNotEvil
         [SerializeField] private bool canMove;
         [SerializeField] private bool inMotion;
 
+        bool startingJump;
+
         private Vector2 personShape;
 
         private void Start()
         {
             canMove = true;
             inMotion = false;
+            startingJump = false;
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -68,6 +72,8 @@ namespace TotallyNotEvil
             // keeping the x value half of the width makes sure our boxCast (later in the code) doesn't 
             // get triggered by accidental side-contact overlap between persons - avoiding unexpected rocket boots
             personShape = new Vector2(boxCollider.size.x, boxCollider.size.y*2);
+
+            masks = LayerMask.GetMask("World", "Possessable");
         }
 
 
@@ -77,21 +83,20 @@ namespace TotallyNotEvil
             {
                 // AI movement
 
-                // define movement goal
+                // define movement goal if NPC can wander and is on the ground and not in motion
                 if (!inMotion) 
                 {
-                    if(IsGrounded())
-                    { //being grounded allows us to set the correct y position for posToMoveTo
+                    if (canWander)
+                    {
+                        if (IsGrounded())
+                        { //being grounded allows us to set the correct y position for posToMoveTo
 
-                        //old way:
-                        //posToMoveTo = new Vector2(Random.Range(range[0].x, range[1].x), transform.position.y);
+                            posToMoveTo = new Vector2(RandomXNotTooClose(), transform.position.y);
 
-                        //new way:
-                        posToMoveTo = new Vector2(RandomXNotTooClose(), transform.position.y);
+                            //Debug.Log(Vector2.Distance(transform.position, posToMoveTo)); //should show that the distance of the move is greater than void-radius
 
-                        //Debug.Log(Vector2.Distance(transform.position, posToMoveTo)); //should show that the distance of the move is greater than void-radius
-
-                        StartCoroutine(ChooseMovePos());
+                            StartCoroutine(ChooseMovePos());
+                        }
                     }
                 }
                 else // if inMotion, pursue movement goal
@@ -103,17 +108,24 @@ namespace TotallyNotEvil
                     inMotion = false;
                 }
             }
-            else
-            {
-                // edits sprite to possessed sprite.
-                if (IsPossessed && sr.sprite.Equals(defaultSprite))
-                    sr.sprite = possessedIdleSprite;
-                else if (!IsPossessed && !sr.sprite.Equals(defaultSprite))
-                    sr.sprite = defaultSprite;
-            }
 
             // runs the anims
             PeopleAnim();
+        }
+
+        private void LateUpdate()
+        {
+            // putting sprite changes in a late update assures we can override the animator
+
+            // edits sprite to possessed sprite.
+            if (IsPossessed && sr.sprite.Equals(defaultSprite))
+            {
+                sr.sprite = possessedIdleSprite;
+            }
+            else if (!IsPossessed && sr.sprite.Equals(possessedIdleSprite))
+            {
+                sr.sprite = defaultSprite;
+            }
         }
 
 
@@ -129,8 +141,10 @@ namespace TotallyNotEvil
         public void JumpAction()
         {
             Debug.Log("IsGrounded: " + IsGrounded().ToString());
-            if (IsGrounded())
+            if (IsGrounded() && !startingJump)
             {
+                startingJump = true;
+                StartCoroutine(JumpCoolDown());
                 rb.AddForce(Vector2.up * JumpHeight, ForceMode2D.Impulse);
             }
         }
@@ -138,11 +152,12 @@ namespace TotallyNotEvil
 
         private bool IsGrounded()
         {
-            Debug.Log(personShape);
             RaycastHit2D[] _hits = Physics2D.BoxCastAll(transform.position, personShape, 0f, Vector2.down, .05f, masks);
 
-            if (_hits != null && _hits.Length != 0) {
-                for (int i = 0; i < _hits.Length; i++) {
+            if (_hits != null && _hits.Length != 0)
+            {
+                for (int i = 0; i < _hits.Length; i++)
+                {
                     if (_hits[i].collider.gameObject != gameObject)
                     {
                         return true;
@@ -151,10 +166,7 @@ namespace TotallyNotEvil
             }
 
 
-            //else
-            //{
             return false;
-            //}
         }
 
 
@@ -178,6 +190,10 @@ namespace TotallyNotEvil
             yield return new WaitForSeconds(Random.Range(2, 4));
             canMove = true;
             inMotion = true;
+        }
+        private IEnumerator JumpCoolDown() {
+            yield return new WaitForSeconds(.5f);
+            startingJump = false;
         }
 
         private float RandomXNotTooClose() {

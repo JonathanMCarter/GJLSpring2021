@@ -21,6 +21,7 @@ namespace TotallyNotEvil
 
         [SerializeField] private UnityEngine.Events.UnityEvent e;
         [SerializeField] private bool possessionEventRan = false;
+        [SerializeField] private bool eventEnabled = false;
         private Rigidbody2D rb;
         private SpriteRenderer sr;
         private Animator anim;
@@ -36,7 +37,7 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (IsPossessed && !possessionEventRan)
+            if (IsPossessed && !possessionEventRan && eventEnabled)
             {
                 e.Invoke();
                 possessionEventRan = true;

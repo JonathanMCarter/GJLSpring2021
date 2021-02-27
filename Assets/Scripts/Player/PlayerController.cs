@@ -126,8 +126,14 @@ namespace TotallyNotEvil
                         }
                     } 
                 }
-
-                arrow.transform.position = new Vector3(am.transform.position.x, am.transform.position.y + 1f, 0f);
+                if (am.tag == "Rat")
+                {
+                    arrow.transform.position = new Vector3(am.transform.position.x, am.transform.position.y + 1f, 0f);
+                }
+                else {
+                    arrow.transform.position = new Vector3(am.transform.position.x, am.transform.position.y + 2f, 0f);
+                }
+                
             }
             else
             {
@@ -206,6 +212,8 @@ namespace TotallyNotEvil
                 // the player is no longer in a body
                 inBody = false;
 
+                //orb.GetComponent<Orb>().CanTakeDamage = true;
+
                 // direction to shoot
                 ShootOrbInDirection(am);
 
@@ -213,6 +221,7 @@ namespace TotallyNotEvil
                 rb.velocity = Vector2.zero;
                 //am = null;
                 am = orb;
+                am.GetComponent<IDamagable>().CanTakeDamage = true;
                 vCam.SetTargetAndFollow(orb.transform);
             }
             else
