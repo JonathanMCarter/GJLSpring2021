@@ -85,7 +85,6 @@ namespace TotallyNotEvil
 
             if (startAsOrb)
             {
-                orb.SetActive(true);
                 am = orb;
             }
 
