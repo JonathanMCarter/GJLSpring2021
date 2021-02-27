@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using CarterGames.Assets.AudioManager;
-
+using TotallyNotEvil.Audio;
 
 namespace TotallyNotEvil
 {
@@ -22,6 +22,10 @@ namespace TotallyNotEvil
         private Actions actions;
         private AudioManager am;
 
+        [SerializeField] private bool toOffice;
+        [SerializeField] private bool toCEO;
+        private MusicController mc;
+
 
         private void OnEnable()
         {
@@ -39,6 +43,7 @@ namespace TotallyNotEvil
         private void Start()
         {
             am = FindObjectOfType<AudioManager>();
+            mc = FindObjectOfType<MusicController>();
         }
 
 
@@ -63,6 +68,18 @@ namespace TotallyNotEvil
             {
                 isInLift = true;
                 toTeleport = collision.gameObject;
+
+                if (toOffice)
+                {
+                    mc.inOffice = true;
+                    mc.inBasement = false;
+                }
+
+                if (toCEO)
+                {
+                    mc.inCEOOffice = true;
+                    mc.inOffice = false;
+                }
             }
         }
 
