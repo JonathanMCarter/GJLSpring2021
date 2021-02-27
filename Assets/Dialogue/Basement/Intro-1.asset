@@ -13,15 +13,12 @@ MonoBehaviour:
   m_Name: Intro-1
   m_EditorClassIdentifier: 
   names:
-  - 
   - Spectre
   - Spectre
   dialogue:
-  - 
   - So, the story starts, weirdly enough, about a day after I died...
   - First, there was nothing. And then, without much warning...
   durationToShow:
-  - 6
   - 6
   - 3
   timeUntilHide: 3

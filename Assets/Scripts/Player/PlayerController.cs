@@ -309,9 +309,9 @@ namespace TotallyNotEvil
         private void ShootOrbInDirection(GameObject player)
         {
             if (device != null && (device.displayName.Equals("Mouse") || device.displayName.Equals("Keyboard")))
-                orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)player.transform.position).normalized * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                orb.GetComponent<Rigidbody2D>().AddForce(((Vector2)cam.ScreenToWorldPoint(actions.Movement.MousePos.ReadValue<Vector2>()) - (Vector2)player.transform.position).normalized * power * Time.deltaTime, ForceMode2D.Impulse);
             else
-                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * 10 * power * Time.deltaTime, ForceMode2D.Impulse);
+                orb.GetComponent<Rigidbody2D>().AddForce(actions.Movement.Move.ReadValue<Vector2>() * power * Time.deltaTime, ForceMode2D.Impulse);
         }
         
 

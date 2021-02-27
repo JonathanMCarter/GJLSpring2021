@@ -35,9 +35,9 @@ namespace CarterGames.Assets.AudioManager
         public Effects activeEffect;
         public bool shouldLoop;
 
-        private AudioSource[] source;
-        private int activeSource;
-        private bool runEffect;
+        [SerializeField] private AudioSource[] source;
+        internal int activeSource;
+        [SerializeField] private bool runEffect;
 
 
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -47,10 +47,10 @@ namespace CarterGames.Assets.AudioManager
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         private void Awake()
         {
-            source = GetComponents<AudioSource>();
+            //source = GetComponents<AudioSource>();
             activeSource = 0;
 
-            source[1].volume = 0;
+            //source[1].volume = 0;
 
             if (shouldLoop)
             {
@@ -67,26 +67,26 @@ namespace CarterGames.Assets.AudioManager
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         private void Update()
         {
-            if (runEffect)
-            {
-                switch (activeEffect)
-                {
-                    case Effects.None:
-                        ChangeActiveTrack();
-                        break;
-                    case Effects.FadeIn:
-                        FadeClipIn();
-                        break;
-                    case Effects.FadeOut:
-                        FadeClipOut();
-                        break;
-                    case Effects.CrossFade:
-                        CrossFadeClips();
-                        break;
-                    default:
-                        break;
-                }
-            }
+            //if (runEffect)
+            //{
+            //    switch (activeEffect)
+            //    {
+            //        case Effects.None:
+            //            ChangeActiveTrack();
+            //            break;
+            //        case Effects.FadeIn:
+            //            FadeClipIn();
+            //            break;
+            //        case Effects.FadeOut:
+            //            FadeClipOut();
+            //            break;
+            //        case Effects.CrossFade:
+            //            CrossFadeClips();
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //}
         }
 
 
@@ -252,6 +252,23 @@ namespace CarterGames.Assets.AudioManager
                 activeSource = 0;
                 runEffect = false;
             }
+        }
+
+
+        public AudioSource GetActiveSource()
+        {
+            return source[activeSource];
+        }
+
+        public AudioSource GetSource(int place)
+        {
+            return source[place];
+        }
+
+
+        public void SetAudioSourceClip(AudioClip clip, int place)
+        {
+            source[place].clip = clip;
         }
     }
 }

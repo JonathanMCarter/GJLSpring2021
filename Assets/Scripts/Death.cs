@@ -13,6 +13,10 @@ namespace TotallyNotEvil
             GameObject _go = GameObject.FindGameObjectWithTag("DeathUI");
             Animator _anim = _go.GetComponent<Animator>();
             Text _causeTxt = _go.GetComponentsInChildren<Text>()[1];
+            Dialogue.DialogueScript _dial = GameObject.FindObjectOfType<Dialogue.DialogueScript>();
+
+            // stop dial
+            _dial.StopDial();
 
             // actions
             _anim.SetTrigger("IsDead");

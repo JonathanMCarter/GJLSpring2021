@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using CarterGames.Assets.AudioManager;
 
 
 namespace TotallyNotEvil
@@ -19,6 +20,7 @@ namespace TotallyNotEvil
         public bool hasKey;
 
         private Actions actions;
+        private AudioManager am;
 
 
         private void OnEnable()
@@ -32,6 +34,11 @@ namespace TotallyNotEvil
         {
             StopAllCoroutines();
             actions.Disable();
+        }
+
+        private void Start()
+        {
+            am = FindObjectOfType<AudioManager>();
         }
 
 
@@ -74,6 +81,7 @@ namespace TotallyNotEvil
         private IEnumerator TeleportCo()
         {
             isCoR = true;
+            am.Play("Elevator door close");
             liftUI.SetBool("LevelComplete", true);
             yield return new WaitForSeconds(2f);
             toTeleport.transform.position = toGoTo.transform.position;

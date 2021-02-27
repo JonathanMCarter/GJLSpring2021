@@ -120,7 +120,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Possedded-Walk
-  m_Speed: 0.6
+  m_Speed: 0.25
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 7203442555154321416}
@@ -176,7 +176,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Walk
-  m_Speed: 0.6
+  m_Speed: 0.25
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3544853190981418353}
@@ -210,13 +210,13 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: IsPossessed
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -294,7 +294,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Idle
-  m_Speed: 0.6
+  m_Speed: 0.25
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3081633221697385076}

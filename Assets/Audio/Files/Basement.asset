@@ -20,8 +20,52 @@ MonoBehaviour:
   hasDirectories: 1
   directory:
   - Dialogue
+  - Sound Design/Environment
+  - Sound Design/Ghost
+  - Sound Design/NPCs
+  - Sound Design/Rat
   library:
+  - key: Dial
+    value: {fileID: 8300000, guid: ec68666ccb12768488f01c542a7a5978, type: 3}
   - key: Dialogue_1
     value: {fileID: 8300000, guid: 04271db29ab7ff640bac8793be72470b, type: 3}
   - key: Dialogue_2
     value: {fileID: 8300000, guid: 3aa6ee4f2608c534390f24a82ab7d06e, type: 3}
+  - key: Elevator door close
+    value: {fileID: 8300000, guid: 52f3ee4df01b3f24496f84b22a36bd0b, type: 3}
+  - key: Ghost machine zap
+    value: {fileID: 8300000, guid: 67491742f9536e140b89e4d06152d1fb, type: 3}
+  - key: Ghost Posess build up
+    value: {fileID: 8300000, guid: 8a406855510de5042823f46b0e8de603, type: 3}
+  - key: 'Posess release 1 '
+    value: {fileID: 8300000, guid: 788b652d4ffd8eb45a49f9dbee52712b, type: 3}
+  - key: posess release 2
+    value: {fileID: 8300000, guid: 0d526dffc8432874cb7dd77400e9c51e, type: 3}
+  - key: posess release 3
+    value: {fileID: 8300000, guid: 3410248d1866bc24f9153a78d4440ad4, type: 3}
+  - key: posess release 4
+    value: {fileID: 8300000, guid: 44438f9170558f74abc2999b6a994fd5, type: 3}
+  - key: Shufflestep_1
+    value: {fileID: 8300000, guid: 09a57ff4285c35e44a38731f26527d52, type: 3}
+  - key: Shufflestep_2
+    value: {fileID: 8300000, guid: ecdb4ebbf7021a44f8b09472dc71682d, type: 3}
+  - key: Shufflestep_3
+    value: {fileID: 8300000, guid: 6d141082ff4087149a48217f7b5f0ae0, type: 3}
+  - key: Shufflestep_4
+    value: {fileID: 8300000, guid: e20abac4f31080c4693db82df6fbf58d, type: 3}
+  - key: Shufflestep_5
+    value: {fileID: 8300000, guid: 49f76e7ecf4751b4496c6ce4b02e360a, type: 3}
+  - key: Shufflestep_6
+    value: {fileID: 8300000, guid: b1b580bd0433b1041a3935ddcc43d97f, type: 3}
+  - key: Shufflestep_7
+    value: {fileID: 8300000, guid: b0e927109b3f3664c8f4abdf8b6afe5c, type: 3}
+  - key: Rat movement loop
+    value: {fileID: 8300000, guid: b88d51f69a33eba4da0fbed4c88a2665, type: 3}
+  - key: Ratsqueak1
+    value: {fileID: 8300000, guid: 3d44c8dcff42fe34d9e4444e6c56fcec, type: 3}
+  - key: Ratsqueak2
+    value: {fileID: 8300000, guid: 2df90ba43942a0446975b16695e6869e, type: 3}
+  - key: Ratsqueak3
+    value: {fileID: 8300000, guid: 2e5a364ed6b6ee944ac973f4b3521c07, type: 3}
+  - key: Ratsqueak4
+    value: {fileID: 8300000, guid: 86be2d4192fca254ca8233b96256a9a1, type: 3}
