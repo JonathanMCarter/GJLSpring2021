@@ -11,9 +11,9 @@ namespace TotallyNotEvil.Audio
         [SerializeField] private AudioSource[] sources;
         [SerializeField] private AudioClip[] clips;
         private bool hasFinishedFirst;
-        internal bool inBasement;
-        internal bool inOffice;
-        internal bool inCEOOffice;
+        [SerializeField] internal bool inBasement;
+        [SerializeField] internal bool inOffice;
+        [SerializeField] internal bool inCEOOffice;
 
 
         private void Start()
@@ -45,7 +45,7 @@ namespace TotallyNotEvil.Audio
 
 
             // office
-            if (!inBasement && inOffice && !inCEOOffice)
+            if (!inBasement && inOffice)
             {
                 BasementToOffice();
             }
@@ -54,13 +54,15 @@ namespace TotallyNotEvil.Audio
             // ceo
             if (!inBasement && !inOffice && inCEOOffice)
             {
-
+                OfficeToCEO();
             }
         }
 
 
         public void BasementToOffice()
         {
+            sources[1].Play();
+
             if (sources[0].volume > 0)
             {
                 sources[0].volume -= 1 * Time.deltaTime;

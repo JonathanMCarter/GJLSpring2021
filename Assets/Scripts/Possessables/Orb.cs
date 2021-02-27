@@ -147,7 +147,7 @@ namespace TotallyNotEvil
         {
             Health -= dmg;
             data.profile.TryGet(out Vignette _vin);
-            _vin.intensity.value += .1f;
+            _vin.intensity.value += .05f;
         }
 
 

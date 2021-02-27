@@ -192,7 +192,7 @@ namespace TotallyNotEvil
         private void Drawing(InputAction.CallbackContext ctx)
         {
             isAiming = true;
-            audio.Play("Ghost Posess build up");
+            audio.Play("Posess release 3 ");
         }
 
 
