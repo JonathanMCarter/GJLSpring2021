@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TotallyNotEvil.Interactions;
+using CarterGames.Assets.AudioManager;
 
 namespace TotallyNotEvil
 {
@@ -46,6 +47,9 @@ namespace TotallyNotEvil
 
         // is the user aiming
         internal bool isAiming;
+
+
+        private AudioManager audio;
 
 
         private void OnDisable()
@@ -96,6 +100,9 @@ namespace TotallyNotEvil
             rb = am.GetComponent<Rigidbody2D>();
             cam = Camera.main;
             lr = GetComponent<LineRenderer>();
+
+
+            audio = FindObjectOfType<AudioManager>();
         }
 
 
@@ -185,6 +192,7 @@ namespace TotallyNotEvil
         private void Drawing(InputAction.CallbackContext ctx)
         {
             isAiming = true;
+            audio.Play("Ghost Posess build up");
         }
 
 
@@ -229,6 +237,8 @@ namespace TotallyNotEvil
                 am.GetComponent<Animator>().SetBool("IsAiming", false);
                 am.GetComponent<Animator>().SetBool("IsFlying", true);
             }
+
+            audio.Play("Posess release 1 ");
 
 
             // stop "aiming" & reset the power value

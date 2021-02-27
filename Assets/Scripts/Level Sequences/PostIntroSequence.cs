@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TotallyNotEvil.Dialogue;
+using CarterGames.Assets.AudioManager;
+
 
 namespace TotallyNotEvil.Sequences
 {
@@ -11,10 +13,16 @@ namespace TotallyNotEvil.Sequences
         [SerializeField] private PlayerController player;
         [SerializeField] private Animator ghostMachine;
         [SerializeField] private Sprite ghost;
+        private AudioManager audio;
 
         private void Awake()
         {
             //player.am.SetActive(false);
+        }
+
+        private void Start()
+        {
+            audio = FindObjectOfType<AudioManager>();
         }
 
 
@@ -28,6 +36,7 @@ namespace TotallyNotEvil.Sequences
         {
             player.am.transform.position = ghostMachine.transform.position;
             ghostMachine.SetTrigger("MakeGhost");
+            audio.Play("Ghost machine zap");
             yield return new WaitForSeconds(3f);
             ghostMachine.enabled = false;
             ghostMachine.gameObject.GetComponent<SpriteRenderer>().sprite = ghost;
