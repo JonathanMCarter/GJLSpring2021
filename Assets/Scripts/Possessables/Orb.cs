@@ -61,12 +61,8 @@ namespace TotallyNotEvil
 
             if (!player.inBody && !isCoR)
             {
-                Debug.Log("can dmg registered");
                 if (CanTakeDamage)
-                {
-                    Debug.Log("can dmg registered 2");
                     StartCoroutine(DamageOverTime());
-                }
             }
 
 
@@ -149,7 +145,6 @@ namespace TotallyNotEvil
         /// <param name="dmg"></param>
         public void TakeDamage(int dmg)
         {
-            Debug.Log("Take DMG");
             Health -= dmg;
             data.profile.TryGet(out Vignette _vin);
             _vin.intensity.value += .1f;
@@ -159,7 +154,6 @@ namespace TotallyNotEvil
         private IEnumerator DamageOverTime(float delay = 2.5f)
         {
             isCoR = true;
-            Debug.Log("take damage co run");
             yield return new WaitForSeconds(delay);
             TakeDamage(1);
             isCoR = false;
