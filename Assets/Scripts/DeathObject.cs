@@ -12,7 +12,8 @@ namespace TotallyNotEvil
         {
             if (collision.GetComponent<IPossessable>() != null)
             {
-                Death.PlayerHasDeath(cause);
+                if (collision.GetComponent<IPossessable>().IsPossessed)
+                    Death.PlayerHasDeath(cause);
             }
         }
     }

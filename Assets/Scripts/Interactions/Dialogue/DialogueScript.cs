@@ -254,5 +254,14 @@ namespace TotallyNotEvil.Dialogue
         {
             GetComponent<AudioSource>().Stop();
         }
+
+
+        public void StopDial()
+        {
+            StopAllCoroutines();
+            dialName.text = "";
+            dialText.text = "";
+            GetComponent<AudioSource>().Stop();
+        }
     }
 }
