@@ -32,7 +32,9 @@ namespace TotallyNotEvil.Sequences
             ghostMachine.enabled = false;
             ghostMachine.gameObject.GetComponent<SpriteRenderer>().sprite = ghost;
             player.am.SetActive(true);
-            player.am.GetComponent<IDamagable>().CanTakeDamage = true;
+            yield return new WaitForSeconds(1);
+            player.orb.GetComponent<IDamagable>().CanTakeDamage = true;
+            Debug.Log(player.am.GetComponent<IDamagable>().CanTakeDamage);
         }
     }
 }

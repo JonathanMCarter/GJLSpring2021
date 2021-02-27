@@ -30,7 +30,7 @@ namespace TotallyNotEvil
         [SerializeField] private Canvas arrow;
 
 
-        private GameObject orb;
+        internal GameObject orb;
 
         // input controls ref
         private Actions actions;
