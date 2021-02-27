@@ -48,50 +48,52 @@ namespace CarterGames.Assets.AudioManager
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public override void OnInspectorGUI()
         {
-            HeaderDisplay();
+        //    HeaderDisplay();
 
-            if (!player)
-                player = (MusicPlayer)target;
+        //    if (!player)
+        //        player = (MusicPlayer)target;
 
 
-            EditorGUILayout.BeginVertical("Box");
-            GUILayout.Space(5f);
+        //    EditorGUILayout.BeginVertical("Box");
+        //    GUILayout.Space(5f);
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.LabelField("Track To Play", EditorStyles.boldLabel, GUILayout.MaxWidth(92f));
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
+        //    EditorGUILayout.BeginHorizontal();
+        //    GUILayout.FlexibleSpace();
+        //    EditorGUILayout.LabelField("Track To Play", EditorStyles.boldLabel, GUILayout.MaxWidth(92f));
+        //    GUILayout.FlexibleSpace();
+        //    EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(5f);
+        //    GUILayout.Space(5f);
 
-            EditorGUILayout.BeginHorizontal();
-            player.clips[0] = (AudioClip)EditorGUILayout.ObjectField(player.clips[0], typeof(AudioClip), false);
-            EditorGUILayout.EndHorizontal();
+        //    EditorGUILayout.BeginHorizontal();
+        //    player.clips[0] = (AudioClip)EditorGUILayout.ObjectField(player.clips[0], typeof(AudioClip), false);
+        //    EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(5f);
+        //    GUILayout.Space(5f);
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.LabelField("Mixer", EditorStyles.boldLabel, GUILayout.MaxWidth(55f));
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
+        //    EditorGUILayout.BeginHorizontal();
+        //    GUILayout.FlexibleSpace();
+        //    EditorGUILayout.LabelField("Mixer", EditorStyles.boldLabel, GUILayout.MaxWidth(55f));
+        //    GUILayout.FlexibleSpace();
+        //    EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(5f);
+        //    GUILayout.Space(5f);
 
-            EditorGUILayout.BeginHorizontal();
-            player.mixer = (AudioMixerGroup)EditorGUILayout.ObjectField(player.mixer, typeof(AudioMixerGroup), false);
-            EditorGUILayout.EndHorizontal();
+        //    EditorGUILayout.BeginHorizontal();
+        //    player.mixer = (AudioMixerGroup)EditorGUILayout.ObjectField(player.mixer, typeof(AudioMixerGroup), false);
+        //    EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(5f);
+        //    GUILayout.Space(5f);
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Should Loop Track?", EditorStyles.boldLabel, GUILayout.MaxWidth(130f));
-            player.shouldLoop = EditorGUILayout.Toggle(player.shouldLoop);
-            EditorGUILayout.EndHorizontal();
+        //    EditorGUILayout.BeginHorizontal();
+        //    EditorGUILayout.LabelField("Should Loop Track?", EditorStyles.boldLabel, GUILayout.MaxWidth(130f));
+        //    player.shouldLoop = EditorGUILayout.Toggle(player.shouldLoop);
+        //    EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(5f);
-            EditorGUILayout.EndVertical();
+        //    GUILayout.Space(5f);
+        //    EditorGUILayout.EndVertical();
+
+            base.OnInspectorGUI();
         }
 
 

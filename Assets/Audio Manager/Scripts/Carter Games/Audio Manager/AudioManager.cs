@@ -37,6 +37,7 @@ namespace CarterGames.Assets.AudioManager
         [SerializeField] public AudioManagerFile audioManagerFile;      // The AMF currently in use by this instance of the Audio Manager.
 
         private Dictionary<string, AudioClip> lib;
+        private AudioSource trackedSource;
 
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// <summary>
@@ -57,6 +58,46 @@ namespace CarterGames.Assets.AudioManager
                 lib.Add(audioManagerFile.library[i].key, audioManagerFile.library[i].value);
             }
         }
+
+
+        /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Audio Manager Method | Play a sound that is scanned into the audio manager.
+        /// </summary>
+        /// <param name="request">String | The name of the audio clip you want to play (note it is case sensitive).</param>
+        /// <param name="volume">(*Optional*) Float | The volume that the clip will be played at | Default = 1.</param>
+        /// <param name="pitch">(*Optional*) Float | The pitch that the sound is played at | Default = 1.</param>
+        /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public void PlayTracked(string request, float volume = 1, float pitch = 1)
+        {
+            if (lib.ContainsKey(request))                   // If the sound is in the library
+            {
+                GameObject _clip = Instantiate(audioManagerFile.soundPrefab);                      // Instantiate a Sound prefab
+                AudioSource _source = default;
+
+                if (_clip.GetComponent<AudioSource>())
+                    _source = _clip.GetComponent<AudioSource>();
+                else
+                    Debug.LogWarning("* Audio Manager * | Warning Code 4 | No AudioSource Component found on the Sound Prefab. Please ensure a AudioSouce Component is attached to your prefab.");
+
+                _source.clip = lib[request];                 // Get the prefab and add the requested clip to it
+                _source.volume = volume;                                          // changes the volume if a it is inputted
+                _source.pitch = pitch;                                            // changes the pitch if a change is inputted
+
+                if (trackedSource == null)
+                {
+                    trackedSource = _source;
+                    _source.Play();
+                }
+                else if (!trackedSource.isPlaying)
+                    _source.Play();    
+                
+                Destroy(_clip, _source.clip.length);                              // Destroy the prefab once the clip has finished playing
+            }
+            else
+                Debug.LogWarning("* Audio Manager * | Warning Code 2 | Could not find clip. Please ensure the clip is scanned and the string you entered is correct (Note the input is CaSe SeNsItIvE).");
+        }
+
 
 
         /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

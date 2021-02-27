@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CarterGames.Assets.AudioManager;
+
 
 namespace TotallyNotEvil
 {
@@ -25,6 +27,7 @@ namespace TotallyNotEvil
         private Rigidbody2D rb;
         private SpriteRenderer sr;
         private Animator anim;
+        private AudioManager am;
 
 
         void Start()
@@ -33,7 +36,9 @@ namespace TotallyNotEvil
             rb = GetComponent<Rigidbody2D>();
             anim = GetComponent<Animator>();
             sr = GetComponent<SpriteRenderer>();
+            am = FindObjectOfType<AudioManager>();
         }
+
 
         private void Update()
         {
@@ -49,7 +54,6 @@ namespace TotallyNotEvil
         }
 
 
-
         public void MoveAction(Vector2 dir)
         {
             rb.velocity = new Vector2(dir.x * MoveSpeed, rb.velocity.y);
@@ -58,7 +62,7 @@ namespace TotallyNotEvil
 
         public void JumpAction()
         {
-            // Rats can't jump, just for the sake of less work xD.
+            // Rats can't jump, just for the sake of less work, the method still has to be here though xD.
         }
 
 
@@ -80,6 +84,12 @@ namespace TotallyNotEvil
             }
             else
                 anim.SetBool("IsMoving", false);
+        }
+
+
+        public void FootSteps()
+        {
+            am.PlayTracked("Rat movement loop");
         }
     }
 }

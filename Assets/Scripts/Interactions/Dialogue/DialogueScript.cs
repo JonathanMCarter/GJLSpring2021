@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using CarterGames.Assets.AudioManager;
 
 /*
     This is an old script I made, not perfect, but saves writing it from scratch...
@@ -68,6 +69,7 @@ namespace TotallyNotEvil.Dialogue
         int _lineCount = 0;
         int _placeInLine = 0;
         string _sentence = "";
+
 
 
         private void Start()
@@ -208,6 +210,8 @@ namespace TotallyNotEvil.Dialogue
         {
             if (file.dialogue.Count > _lineCount)
             {
+                PlayDialSounds();
+
                 if (file.dialogue[_lineCount] == _sentence)
                 {
                     _lineCount++;
@@ -232,9 +236,23 @@ namespace TotallyNotEvil.Dialogue
                 dialName.text = "";
                 dialText.text = "";
                 fileHasEnded = true;
+                StopDialAudio();
             }
 
             yield break;
+        }
+
+
+        private void PlayDialSounds()
+        {
+            if (!GetComponent<AudioSource>().isPlaying)
+                GetComponent<AudioSource>().Play();
+        }
+
+
+        private void StopDialAudio()
+        {
+            GetComponent<AudioSource>().Stop();
         }
     }
 }
