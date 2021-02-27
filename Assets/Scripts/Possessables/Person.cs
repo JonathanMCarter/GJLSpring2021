@@ -79,12 +79,12 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (!IsPossessed && canMove) 
+            if (!IsPossessed && canMove)
             {
                 // AI movement
 
                 // define movement goal if NPC can wander and is on the ground and not in motion
-                if (!inMotion) 
+                if (!inMotion)
                 {
                     if (canWander)
                     {
@@ -104,10 +104,16 @@ namespace TotallyNotEvil
                     MoveAction(posToMoveTo);
                 }
                 // TODO allow AI to arrive at a given location
-                if (Vector2.Distance(transform.position, posToMoveTo) < arrivalTolerance) {
+                if (Vector2.Distance(transform.position, posToMoveTo) < arrivalTolerance)
+                {
                     inMotion = false;
                 }
+
+                if (IsPossessed && !rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                    rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
             }
+            else if (IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
             // runs the anims
             PeopleAnim();
@@ -200,7 +206,10 @@ namespace TotallyNotEvil
             // we want to make sure our new random position is not too close to our initial position
 
             float initialX = transform.position.x;
-            float overallRange = range[1].x - range[0].x;
+            float overallRange = 0;
+
+            if (range != null && range.Length.Equals(2))
+                overallRange = range[1].x - range[0].x;
             // throw error if 2 * minimum travel is bigger than the overall range
             if (overallRange < 2 * minTravelDistance) {
                 Debug.LogError("the overall range for the AI must be greater than double the minimum travel distance. gameObject-name: " + gameObject.name);

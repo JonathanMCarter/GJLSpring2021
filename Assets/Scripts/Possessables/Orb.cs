@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 namespace TotallyNotEvil
 {
@@ -12,8 +14,9 @@ namespace TotallyNotEvil
 
         private PlayerController player;
 
+
         // damage visual via vignette ideally (gonna work on it on weds)
-        [SerializeField] private UnityEngine.Rendering.Universal.Vignette vig;
+        [SerializeField] private Volume data;
 
         // Damage
         public bool CanTakeDamage { get; set; }
@@ -31,21 +34,24 @@ namespace TotallyNotEvil
         private void OnDisable()
         {
             StopAllCoroutines();
+            isCoR = false;
         }
 
         private void OnEnable()
         {
+            CanTakeDamage = false;
             Health = 10;
         }
 
+
         private void Start()
         {
-            CanTakeDamage = false;
             wait = new WaitForSeconds(.5f);
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
             anim = GetComponent<Animator>();
             rb = GetComponent<Rigidbody2D>();
             sr = GetComponent<SpriteRenderer>();
+            data = FindObjectOfType<Volume>();
         }
 
 
@@ -140,10 +146,12 @@ namespace TotallyNotEvil
         public void TakeDamage(int dmg)
         {
             Health -= dmg;
+            data.profile.TryGet(out Vignette _vin);
+            _vin.intensity.value += .1f;
         }
 
 
-        private IEnumerator DamageOverTime(float delay = 1f)
+        private IEnumerator DamageOverTime(float delay = 2.5f)
         {
             isCoR = true;
             yield return new WaitForSeconds(delay);
