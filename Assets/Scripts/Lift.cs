@@ -16,6 +16,7 @@ namespace TotallyNotEvil
 
         [SerializeField] private GameObject toTeleport;
         [SerializeField] private bool isCoR;
+        [SerializeField] private GameObject[] peopleToUnmute;
 
         public bool hasKey;
 
@@ -51,8 +52,22 @@ namespace TotallyNotEvil
         {
             if (isInLift && inputPressed && !isCoR && toTeleport && hasKey)
             {
+                //Debug.Log("?");
                 StartCoroutine(TeleportCo());
             }
+
+            if (isCoR) {
+                if (toOffice) mc.BasementToLift();
+                else mc.LiftToOffice();
+            }
+
+            //else if (inputPressed) {
+            //    Debug.Log("elevate me");
+            //    Debug.Log(isInLift);
+            //    Debug.Log(!isCoR);
+            //    Debug.Log(toTeleport);
+            //    Debug.Log(hasKey);
+            //}
         }
 
 
@@ -64,21 +79,25 @@ namespace TotallyNotEvil
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+
             if (collision.GetComponent<IPossessable>() != null)
             {
-                isInLift = true;
-                toTeleport = collision.gameObject;
-
-                if (toOffice)
+                if (collision.GetComponent<IPossessable>().IsPossessed) // don't allow NPCs in the elevator 
                 {
-                    mc.inOffice = true;
-                    mc.inBasement = false;
-                }
+                    isInLift = true;
+                    toTeleport = collision.gameObject;
 
-                if (toCEO)
-                {
-                    mc.inCEOOffice = true;
-                    mc.inOffice = false;
+                    if (toOffice)
+                    {
+                        mc.inOffice = true;
+                        mc.inBasement = false;
+                    }
+
+                    if (toCEO)
+                    {
+                        mc.inCEOOffice = true;
+                        mc.inOffice = false;
+                    }
                 }
             }
         }
@@ -99,11 +118,16 @@ namespace TotallyNotEvil
         {
             isCoR = true;
             am.Play("Elevator door close");
+            mc.IncrementStage(); //change music
             liftUI.SetBool("LevelComplete", true);
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(6f);
             toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
+            mc.IncrementStage(); //change music
             isCoR = false;
+            foreach (var person in peopleToUnmute) {
+                person.GetComponent<PeepsSteps>().IsMuted = false;
+            }
         }
 
 

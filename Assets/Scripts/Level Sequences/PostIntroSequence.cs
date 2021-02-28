@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TotallyNotEvil.Dialogue;
+using TotallyNotEvil.Audio;
 using CarterGames.Assets.AudioManager;
 
 
@@ -13,6 +14,7 @@ namespace TotallyNotEvil.Sequences
         [SerializeField] private PlayerController player;
         [SerializeField] private Animator ghostMachine;
         [SerializeField] private Sprite ghost;
+        [SerializeField] Person[] basementPeople;
         private AudioManager audio;
 
         private void Awake()
@@ -43,7 +45,11 @@ namespace TotallyNotEvil.Sequences
             player.am.SetActive(true);
             yield return new WaitForSeconds(1);
             player.orb.GetComponent<IDamagable>().CanTakeDamage = true;
-            Debug.Log(player.am.GetComponent<IDamagable>().CanTakeDamage);
+            //Debug.Log(player.am.GetComponent<IDamagable>().CanTakeDamage);
+            foreach (var person in basementPeople)
+            {
+                person.GetComponent<PeepsSteps>().IsMuted = false;
+            }
         }
     }
 }

@@ -23,8 +23,11 @@ namespace TotallyNotEvil
 
         // Possession Sprite
         [SerializeField] private Sprite possessedIdleSprite;
+        [SerializeField] private Sprite possessedJumpingSprite;
         private Sprite defaultSprite;
         private SpriteRenderer sr;
+
+        [SerializeField] private Sprite deadSprite;
 
         // Anim stuff
         private Animator anim;
@@ -45,11 +48,14 @@ namespace TotallyNotEvil
         [SerializeField] private bool canMove;
         [SerializeField] private bool inMotion;
 
-        bool startingJump;
+        private bool startingJump;
+        private bool dead;
 
         private Vector2 personShape;
 
         private float previousFrameXPosition;
+
+        private BoxCollider2D boxCollider;
 
         private void Start()
         {
@@ -57,6 +63,7 @@ namespace TotallyNotEvil
             canMove = true;
             inMotion = false;
             startingJump = false;
+            dead = false;
             GetGameObject = this.gameObject;
             rb = GetComponent<Rigidbody2D>();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -69,7 +76,7 @@ namespace TotallyNotEvil
             anim = GetComponent<Animator>();
 
             //set person shape (for IsGrounded)
-            BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+            boxCollider = GetComponent<BoxCollider2D>();
             // boxCollider.size gives values half as big as we might naively expect
             // doubling the y value gives our ordinary height
             // keeping the x value half of the width makes sure our boxCast (later in the code) doesn't 
@@ -82,58 +89,79 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (!IsPossessed && canMove)
+            if (gameObject.tag != "CEO" && !dead)
             {
-                // AI movement
-
-                // define movement goal if NPC can wander and is on the ground and not in motion
-                if (!inMotion)
+                if (!IsPossessed && canMove)
                 {
-                    if (canWander)
+                    // AI movement
+
+                    // define movement goal if NPC can wander and is on the ground and not in motion
+                    if (!inMotion)
                     {
-                        if (IsGrounded())
-                        { //being grounded allows us to set the correct y position for posToMoveTo
+                        if (canWander)
+                        {
+                            if (IsGrounded())
+                            { //being grounded allows us to set the correct y position for posToMoveTo
 
-                            posToMoveTo = new Vector2(RandomXNotTooClose(), transform.position.y);
+                                posToMoveTo = new Vector2(RandomXNotTooClose(), transform.position.y);
 
-                            //Debug.Log(Vector2.Distance(transform.position, posToMoveTo)); //should show that the distance of the move is greater than void-radius
+                                //Debug.Log(Vector2.Distance(transform.position, posToMoveTo)); //should show that the distance of the move is greater than void-radius
 
-                            StartCoroutine(ChooseMovePos());
+                                StartCoroutine(ChooseMovePos());
+                            }
                         }
                     }
-                }
-                else // if inMotion, pursue movement goal
-                {
-                    MoveAction(posToMoveTo);
-                }
-                // TODO allow AI to arrive at a given location
-                if (Vector2.Distance(transform.position, posToMoveTo) < arrivalTolerance)
-                {
-                    inMotion = false;
-                }
+                    else // if inMotion, pursue movement goal
+                    {
+                        MoveAction(posToMoveTo);
+                    }
+                    // TODO allow AI to arrive at a given location
+                    if (Vector2.Distance(transform.position, posToMoveTo) < arrivalTolerance)
+                    {
+                        inMotion = false;
+                    }
 
-                if (IsPossessed && !rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
-                    rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+                    if (IsPossessed && !rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                        rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+                }
+                else if (IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                    rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
-            else if (IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
-                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-            // runs the anims
-            PeopleAnim();
+            // runs the anims, if not dead
+            if (!dead)
+            {
+                PeopleAnim();
+            }
         }
 
         private void LateUpdate()
         {
             // putting sprite changes in a late update assures we can override the animator
+            if (gameObject.tag != "CEO" && !dead)
+            {
 
-            // edits sprite to possessed sprite.
-            if (IsPossessed && sr.sprite.Equals(defaultSprite))
-            {
-                sr.sprite = possessedIdleSprite;
+
+                if (!IsGrounded())
+                {
+                    if (sr.sprite)
+                        sr.sprite = possessedJumpingSprite;
+                }
+                else
+                {
+
+                    // edits sprite to possessed sprite.
+                    if (IsPossessed && sr.sprite.Equals(defaultSprite))
+                    {
+                        sr.sprite = possessedIdleSprite;
+                    }
+                    else if (!IsPossessed && sr.sprite.Equals(possessedIdleSprite))
+                    {
+                        sr.sprite = defaultSprite;
+                    }
+                }
             }
-            else if (!IsPossessed && sr.sprite.Equals(possessedIdleSprite))
-            {
-                sr.sprite = defaultSprite;
+            else if (dead) {
+                if (!sr.sprite.Equals(deadSprite)) sr.sprite = deadSprite;
             }
         }
 
@@ -266,7 +294,7 @@ namespace TotallyNotEvil
             else if (!IsPossessed && inMotion) {
                 float velocityX = (transform.position.x - previousFrameXPosition)/Time.deltaTime;
                 //Debug.Log(velocityX);
-                if (velocityX > 1f || velocityX < -1f)
+                if (velocityX > 1.5f || velocityX < -1.5f)
                 {
                     anim.SetBool("IsWalking", true);
 
@@ -281,6 +309,15 @@ namespace TotallyNotEvil
 
             previousFrameXPosition = transform.position.x;
 
+        }
+
+        public void Death() {
+            dead = true;
+            sr.sprite = deadSprite;
+            boxCollider.size = new Vector2(boxCollider.size.y, boxCollider.size.x);
+        }
+        public bool IsDead() {
+            return dead;
         }
     }
 }

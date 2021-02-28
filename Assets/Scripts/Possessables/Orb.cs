@@ -52,6 +52,8 @@ namespace TotallyNotEvil
             rb = GetComponent<Rigidbody2D>();
             sr = GetComponent<SpriteRenderer>();
             data = FindObjectOfType<Volume>();
+
+            sr.sortingOrder = 4;
         }
 
 
@@ -110,7 +112,7 @@ namespace TotallyNotEvil
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.GetComponent<Interactions.IInteractable>() != null)
-                player.interaction = collision.GetComponent<Interactions.IInteractable>();
+                    player.interaction = collision.GetComponent<Interactions.IInteractable>();
         }
 
 

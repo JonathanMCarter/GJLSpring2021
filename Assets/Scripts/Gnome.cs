@@ -95,7 +95,8 @@ namespace TotallyNotEvil
             isCoR = true;
             yield return new WaitForSeconds(1f);
             player.DePossess();
-            toMurder.SetActive(false);
+            //toMurder.SetActive(false);
+            toMurder.GetComponent<Person>().Death();
             isCoR = false;
         }
     }

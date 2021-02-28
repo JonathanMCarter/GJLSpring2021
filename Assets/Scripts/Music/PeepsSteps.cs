@@ -7,10 +7,15 @@ namespace TotallyNotEvil.Audio
     public class PeepsSteps : PlayAudioFromGroup
     {
         [SerializeField] private AudioClip[] clips;
+        [SerializeField] private bool _muted;
+        public bool IsMuted { get { return _muted; } set { _muted = value; } }
 
         public void FootSteps()
         {
-            base.PlayRandomFromGroup(clips, .75f);
+            if (!_muted)
+            {
+                base.PlayRandomFromGroup(clips, .75f);
+            }
         }
     }
 }
