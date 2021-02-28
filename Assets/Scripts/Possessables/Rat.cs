@@ -28,7 +28,7 @@ namespace TotallyNotEvil
         private SpriteRenderer sr;
         private Animator anim;
         private AudioManager am;
-
+        private RigidbodyConstraints2D initialRestraints;
 
         void Start()
         {
@@ -37,6 +37,7 @@ namespace TotallyNotEvil
             anim = GetComponent<Animator>();
             sr = GetComponent<SpriteRenderer>();
             am = FindObjectOfType<AudioManager>();
+            initialRestraints = rb.constraints;
         }
 
 
@@ -50,6 +51,12 @@ namespace TotallyNotEvil
             else if (IsPossessed)
             {
                 RatAnim();
+            }
+
+            if (!IsPossessed && !rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+            else if (IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX)) {
+                rb.constraints = initialRestraints;
             }
         }
 

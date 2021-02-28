@@ -15,12 +15,14 @@ namespace TotallyNotEvil.Interactions
         {
             noteUI = GameObject.FindGameObjectWithTag("NoteUI").GetComponent<NoteUI>();
             arrowSprite = transform.GetChild(0).gameObject;
+            StartCoroutine(DisableArrowSprite());
         }
 
 
         public void Interact()
         {
-            noteUI.SetNote(note);
+            if (arrowSprite.activeInHierarchy)
+                noteUI.SetNote(note);
         }
 
 
@@ -44,6 +46,11 @@ namespace TotallyNotEvil.Interactions
                     FindObjectOfType<PlayerController>().interaction = null;
                 }
             }
+        }
+
+        private IEnumerator DisableArrowSprite() {
+            yield return new WaitForSeconds(.5f);
+            arrowSprite.SetActive(false);
         }
     }
 }

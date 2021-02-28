@@ -9,7 +9,7 @@ namespace TotallyNotEvil
 {
     public class Lift : MonoBehaviour
     {
-        [SerializeField] private bool isInLift;
+        [SerializeField] private bool isInFrontOfLift;
         [SerializeField] internal bool inputPressed;
         [SerializeField] private GameObject toGoTo;
         [SerializeField] private Animator liftUI;
@@ -50,7 +50,7 @@ namespace TotallyNotEvil
 
         private void Update()
         {
-            if (isInLift && inputPressed && !isCoR && toTeleport && hasKey)
+            if (isInFrontOfLift && inputPressed && !isCoR && toTeleport && hasKey)
             {
                 //Debug.Log("?");
                 StartCoroutine(TeleportCo());
@@ -61,19 +61,17 @@ namespace TotallyNotEvil
                 else mc.LiftToOffice();
             }
 
-            //else if (inputPressed) {
-            //    Debug.Log("elevate me");
-            //    Debug.Log(isInLift);
-            //    Debug.Log(!isCoR);
-            //    Debug.Log(toTeleport);
-            //    Debug.Log(hasKey);
-            //}
+            if (!hasKey && inputPressed) {
+                inputPressed = false;
+            }
+
         }
 
 
         private void Interact(InputAction.CallbackContext ctx)
         {
-            inputPressed = !inputPressed;
+            if(isInFrontOfLift)
+            inputPressed = true;
         }
 
 
@@ -84,20 +82,8 @@ namespace TotallyNotEvil
             {
                 if (collision.GetComponent<IPossessable>().IsPossessed) // don't allow NPCs in the elevator 
                 {
-                    isInLift = true;
+                    isInFrontOfLift = true;
                     toTeleport = collision.gameObject;
-
-                    if (toOffice)
-                    {
-                        mc.inOffice = true;
-                        mc.inBasement = false;
-                    }
-
-                    if (toCEO)
-                    {
-                        mc.inCEOOffice = true;
-                        mc.inOffice = false;
-                    }
                 }
             }
         }
@@ -106,9 +92,9 @@ namespace TotallyNotEvil
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            if (isInLift)
+            if (isInFrontOfLift)
             {
-                isInLift = false;
+                isInFrontOfLift = false;
                 toTeleport = null;
             }
         }
@@ -116,11 +102,13 @@ namespace TotallyNotEvil
 
         private IEnumerator TeleportCo()
         {
+            inputPressed = false;
             isCoR = true;
-            am.Play("Elevator door close");
             mc.IncrementStage(); //change music
             liftUI.SetBool("LevelComplete", true);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(1.5f);
+            am.Play("Elevator door close");
+            yield return new WaitForSeconds(4.5f);
             toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
             mc.IncrementStage(); //change music
@@ -128,6 +116,7 @@ namespace TotallyNotEvil
             foreach (var person in peopleToUnmute) {
                 person.GetComponent<PeepsSteps>().IsMuted = false;
             }
+            liftUI.SetBool("LevelComplete", false);
         }
 
 
