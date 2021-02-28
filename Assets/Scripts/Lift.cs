@@ -21,6 +21,7 @@ namespace TotallyNotEvil
 
         private Actions actions;
         private AudioManager am;
+        private MusicController music;
 
         [SerializeField] private bool toOffice;
         [SerializeField] private bool toCEO;
@@ -44,6 +45,7 @@ namespace TotallyNotEvil
         {
             am = FindObjectOfType<AudioManager>();
             mc = FindObjectOfType<MusicController>();
+            music = FindObjectOfType<MusicController>();
         }
 
 
@@ -98,11 +100,14 @@ namespace TotallyNotEvil
         private IEnumerator TeleportCo()
         {
             isCoR = true;
-            am.Play("Elevator door close");
             liftUI.SetBool("LevelComplete", true);
-            yield return new WaitForSeconds(2f);
-            toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
+            am.Play("Elevator door close");
+            music.PlayLiftMusic();
+            yield return new WaitForSeconds(1f);
+            toTeleport.transform.position = toGoTo.transform.position;
+            yield return new WaitForSeconds(3f);
+            music.ChangeMusic();
             isCoR = false;
         }
 
