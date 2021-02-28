@@ -49,11 +49,8 @@ namespace TotallyNotEvil
 
         private Vector2 personShape;
 
-        private float previousFrameXPosition;
-
         private void Start()
         {
-            previousFrameXPosition = transform.position.x;
             canMove = true;
             inMotion = false;
             startingJump = false;
@@ -248,39 +245,18 @@ namespace TotallyNotEvil
 
 
             // is walking?
-            if (IsPossessed)
+            if ((IsPossessed && (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)) || (!IsPossessed && inMotion))
             {
-                if (rb.velocity.normalized.x > .1f || rb.velocity.normalized.x < -.1f)
-                {
-                    anim.SetBool("IsWalking", true);
+                anim.SetBool("IsWalking", true);
 
-                    if (rb.velocity.normalized.x < 0)
-                        sr.flipX = true;
-                    else
-                        sr.flipX = false;
-                }
-                else if (anim.GetBool("IsWalking"))
-                    anim.SetBool("IsWalking", false);
+                if (rb.velocity.normalized.x < -.05f)
+                    sr.flipX = true;
+                else
+                    sr.flipX = false;
             }
-
-            else if (!IsPossessed && inMotion) {
-                float velocityX = (transform.position.x - previousFrameXPosition)/Time.deltaTime;
-                //Debug.Log(velocityX);
-                if (velocityX > 1f || velocityX < -1f)
-                {
-                    anim.SetBool("IsWalking", true);
-
-                    if (velocityX < 0)
-                        sr.flipX = true;
-                    else
-                        sr.flipX = false;
-                }
-            }
-            else if (anim.GetBool("IsWalking") && !inMotion)
+            else if (anim.GetBool("IsWalking"))
                 anim.SetBool("IsWalking", false);
-
-            previousFrameXPosition = transform.position.x;
-
+                
         }
     }
 }
