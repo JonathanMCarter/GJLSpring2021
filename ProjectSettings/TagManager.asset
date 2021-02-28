@@ -9,6 +9,7 @@ TagManager:
   - Dialogue
   - DeathUI
   - Rat
+  - CEO
   layers:
   - Default
   - TransparentFX

@@ -27,7 +27,10 @@ namespace TotallyNotEvil.Interactions
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Possessable")))
-                arrowSprite.SetActive(true);
+                if (collision.gameObject.GetComponent<IPossessable>().IsPossessed)
+                {
+                    arrowSprite.SetActive(true);
+                }
         }
 
 
@@ -35,8 +38,11 @@ namespace TotallyNotEvil.Interactions
         {
             if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Possessable")))
             {
-                arrowSprite.SetActive(false);
-                FindObjectOfType<PlayerController>().interaction = null;
+                if (collision.gameObject.GetComponent<IPossessable>().IsPossessed)
+                {
+                    arrowSprite.SetActive(false);
+                    FindObjectOfType<PlayerController>().interaction = null;
+                }
             }
         }
     }
