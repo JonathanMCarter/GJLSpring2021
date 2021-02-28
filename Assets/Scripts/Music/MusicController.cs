@@ -6,6 +6,7 @@ using CarterGames.Assets.AudioManager;
 
 namespace TotallyNotEvil.Audio
 {
+    // This script is vert janky as it was done last min when I could barely think, also it kept being a pain when it should've worked, hense no transitions....
     public class MusicController : MonoBehaviour
     {
         [SerializeField] private AudioSource[] sources;
@@ -14,7 +15,7 @@ namespace TotallyNotEvil.Audio
         [SerializeField] internal bool inBasement;
         [SerializeField] internal bool inOffice;
         [SerializeField] internal bool inCEOOffice;
-
+        private bool isSecondLift;
 
         private void Start()
         {
@@ -42,45 +43,39 @@ namespace TotallyNotEvil.Audio
                     sources[0].Play();
                 }
             }
-
-
-            // office
-            if (!inBasement && inOffice)
-            {
-                BasementToOffice();
-            }
-
-
-            // ceo
-            if (!inBasement && !inOffice && inCEOOffice)
-            {
-                OfficeToCEO();
-            }
         }
 
 
-        public void BasementToOffice()
+        public void PlayLiftMusic()
         {
-            sources[1].Play();
+            sources[0].Stop();
+            sources[0].clip = clips[4];
+            sources[0].Play();
+        }
 
-            if (sources[0].volume > 0)
-            {
-                sources[0].volume -= 1 * Time.deltaTime;
-                sources[1].volume += 1 * Time.deltaTime;
-            }
+        public void ChangeMusic()
+        {
+            if (isSecondLift)
+                ChangeToCEOMusic();
+            else
+                ChangeToOfficeMusic();
         }
 
 
-        public void OfficeToCEO()
+        public void ChangeToOfficeMusic()
         {
+            sources[0].Stop();
+            sources[0].clip = clips[2];
+            sources[0].Play();
+            isSecondLift = true;
+        }
+
+
+        public void ChangeToCEOMusic()
+        {
+            sources[0].Stop();
             sources[0].clip = clips[3];
             sources[0].Play();
-
-            if (sources[1].volume > 0)
-            {
-                sources[1].volume -= 1 * Time.deltaTime;
-                sources[0].volume += 1 * Time.deltaTime;
-            }
         }
     }
 }
