@@ -17,6 +17,7 @@ namespace TotallyNotEvil
         [SerializeField] private GameObject toTeleport;
         [SerializeField] private bool isCoR;
         [SerializeField] private GameObject[] peopleToUnmute;
+        [SerializeField] private GameObject[] peopleToMute;
 
         public bool hasKey;
 
@@ -104,6 +105,12 @@ namespace TotallyNotEvil
         {
             inputPressed = false;
             isCoR = true;
+
+            foreach (var person in peopleToMute)
+            {
+                person.GetComponent<PeepsSteps>().IsMuted = true;
+            }
+
             mc.IncrementStage(); //change music
             liftUI.SetBool("LevelComplete", true);
             yield return new WaitForSeconds(1.5f);
@@ -113,9 +120,11 @@ namespace TotallyNotEvil
             yield return new WaitForSeconds(1f);
             mc.IncrementStage(); //change music
             isCoR = false;
+
             foreach (var person in peopleToUnmute) {
                 person.GetComponent<PeepsSteps>().IsMuted = false;
             }
+
             liftUI.SetBool("LevelComplete", false);
         }
 
