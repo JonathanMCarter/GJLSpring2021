@@ -117,10 +117,11 @@ namespace TotallyNotEvil
         private IEnumerator TeleportCo()
         {
             isCoR = true;
-            am.Play("Elevator door close");
             mc.IncrementStage(); //change music
             liftUI.SetBool("LevelComplete", true);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(1.5f);
+            am.Play("Elevator door close");
+            yield return new WaitForSeconds(4.5f);
             toTeleport.transform.position = toGoTo.transform.position;
             yield return new WaitForSeconds(1f);
             mc.IncrementStage(); //change music
@@ -128,6 +129,7 @@ namespace TotallyNotEvil
             foreach (var person in peopleToUnmute) {
                 person.GetComponent<PeepsSteps>().IsMuted = false;
             }
+            liftUI.SetBool("LevelComplete", false);
         }
 
 

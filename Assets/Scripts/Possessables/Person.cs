@@ -124,7 +124,7 @@ namespace TotallyNotEvil
                     if (IsPossessed && !rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
                         rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
                 }
-                else if (IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
+                else if (!IsPossessed && rb.constraints.HasFlag(RigidbodyConstraints2D.FreezePositionX))
                     rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
             // runs the anims, if not dead
