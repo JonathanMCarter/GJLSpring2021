@@ -106,7 +106,7 @@ namespace TotallyNotEvil
             music.PlayLiftMusic();
             yield return new WaitForSeconds(1f);
             toTeleport.transform.position = toGoTo.transform.position;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(3f);
             music.ChangeMusic();
             isCoR = false;
         }
