@@ -192,7 +192,7 @@ namespace TotallyNotEvil
         private void Drawing(InputAction.CallbackContext ctx)
         {
             isAiming = true;
-            audio.PlayFromTime("posess release 3", .3f);
+            audio.Play("Posess release 3 ");
         }
 
 
@@ -238,7 +238,7 @@ namespace TotallyNotEvil
                 am.GetComponent<Animator>().SetBool("IsFlying", true);
             }
 
-            audio.PlayFromTime("Posess release 1", .3f);
+            audio.Play("Posess release 1 ");
 
 
             // stop "aiming" & reset the power value

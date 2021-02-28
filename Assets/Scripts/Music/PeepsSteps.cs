@@ -14,7 +14,7 @@ namespace TotallyNotEvil.Audio
         {
             if (!_muted)
             {
-                base.PlayRandomFromGroup(clips, Random.Range(.2f, .4f));
+                base.PlayRandomFromGroup(clips, .75f);
             }
         }
     }

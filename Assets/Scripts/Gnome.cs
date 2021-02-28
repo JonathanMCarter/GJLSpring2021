@@ -93,8 +93,9 @@ namespace TotallyNotEvil
         private IEnumerator Kill()
         {
             isCoR = true;
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1f);
             player.DePossess();
+            //toMurder.SetActive(false);
             toMurder.GetComponent<Person>().Death();
             isCoR = false;
         }

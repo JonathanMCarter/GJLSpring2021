@@ -9,7 +9,6 @@ namespace TotallyNotEvil
     public class CEOChoice : MonoBehaviour
     {
         [SerializeField] private bool takeJob;
-        [SerializeField] private DialogueFile ceoFile;
         [SerializeField] private DialogueFile[] choices;
         [SerializeField] private Animator fadeToBlack;
         [SerializeField] private Canvas optionsUI;
@@ -36,7 +35,7 @@ namespace TotallyNotEvil
                     KillCEO();
             }
 
-            if (dial.file.Equals(ceoFile) && dial.fileHasEnded && !choiceMade)
+            if (dial.fileHasEnded && !choiceMade)
             {
                 ShowOptions();
             }

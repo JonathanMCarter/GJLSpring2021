@@ -20,8 +20,7 @@ namespace TotallyNotEvil.Interactions
 
         public void Interact()
         {
-            if (arrowSprite.activeInHierarchy)
-                noteUI.SetNote(note);
+            noteUI.SetNote(note);
         }
 
 
